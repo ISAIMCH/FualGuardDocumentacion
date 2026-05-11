@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FuelSentinel | Panel de Telemetría</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0d1117 0%, #161b22 100%);
+            color: #e6edf3;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            background: linear-gradient(180deg, #0d1117 0%, #161b22 100%);
+            height: 100vh;
+            padding: 25px 20px;
+            border-right: 2px solid #f39c12;
+            position: fixed;
+            width: 260px;
+            overflow-y: auto;
+            box-shadow: 5px 0 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .sidebar-brand {
+            color: #f39c12;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .sidebar-brand i {
+            font-size: 1.8rem;
+        }
+
+        .sidebar-subtitle {
+            color: #8b949e;
+            font-size: 0.75rem;
+            margin-bottom: 20px;
+            line-height: 1.4;
+            font-weight: 500;
+        }
+
+        .sidebar-divider {
+            border-color: #30363d;
+            margin: 20px 0;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, rgba(35, 134, 54, 0.2) 0%, rgba(35, 134, 54, 0.05) 100%);
+            border: 1px solid #238636;
+            border-radius: 20px;
+            padding: 8px 12px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #238636;
+        }
+
+        .status-indicator {
+            width: 8px;
+            height: 8px;
+            background: #238636;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* MAIN CONTENT */
+        .main-content {
+            margin-left: 260px;
+            padding: 30px;
+            min-height: 100vh;
+        }
+
+        .page-header {
+            margin-bottom: 40px;
+            border-bottom: 2px solid #30363d;
+            padding-bottom: 20px;
+        }
+
+        .page-header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #e6edf3;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .page-header h1 i {
+            color: #f39c12;
+            font-size: 2.2rem;
+        }
+
+        .page-header p {
+            color: #8b949e;
+            margin-top: 5px;
+            font-size: 0.95rem;
+        }
+
+        /* CARD IoT */
+        .card-iot {
+            background: linear-gradient(135deg, #161b22 0%, #1c2128 100%);
+            border: 1px solid #30363d;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card-iot::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(243, 156, 18, 0.1) 0%, transparent 70%);
+            border-radius: 50%;
+            transition: all 0.6s ease;
+        }
+
+        .card-iot:hover::before {
+            top: -20%;
+            right: -20%;
+        }
+
+        .card-iot:hover {
+            border-color: #f39c12;
+            box-shadow: 0 15px 40px rgba(243, 156, 18, 0.15);
+            transform: translateY(-5px);
+            background: linear-gradient(135deg, #1c2128 0%, #262d33 100%);
+        }
+
+        .card-iot-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .card-iot h5 {
+            color: #f39c12;
+            font-size: 0.95rem;
+            letter-spacing: 1px;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .card-iot-status {
+            font-size: 0.75rem;
+            background: rgba(35, 134, 54, 0.2);
+            color: #238636;
+            padding: 4px 8px;
+            border-radius: 10px;
+            border: 1px solid #238636;
+        }
+
+        /* IFRAME */
+        iframe {
+            width: 100%;
+            border: none;
+            border-radius: 10px;
+            background: #0d1117;
+            display: block;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* MENU NAVIGATION */
+        .menu-tabs {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #30363d;
+            padding-bottom: 15px;
+        }
+
+        .menu-tab {
+            background: transparent;
+            border: none;
+            color: #8b949e;
+            font-size: 1rem;
+            font-weight: 600;
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .menu-tab:hover {
+            color: #f39c12;
+        }
+
+        .menu-tab.active {
+            color: #f39c12;
+            border-bottom: 3px solid #f39c12;
+            margin-bottom: -15px;
+            padding-bottom: 12px;
+        }
+
+        /* CONTENT SECTIONS */
+        .content-section {
+            display: none;
+        }
+
+        .content-section.active {
+            display: block;
+            animation: fadeIn 0.4s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* GRID LAYOUT */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .metrics-full {
+            grid-column: 1 / -1;
+        }
+
+        /* RESPONSIVO */
+        @media (max-width: 1200px) {
+            .metrics-grid {
+                grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+                border-right: none;
+                border-bottom: 2px solid #f39c12;
+                margin-bottom: 20px;
+            }
+
+            .main-content {
+                margin-left: 0;
+                padding: 20px;
+            }
+
+            .page-header h1 {
+                font-size: 1.5rem;
+            }
+
+            .metrics-grid {
+                grid-template-columns: 1fr;
+            }
+
+            iframe {
+                min-height: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+        <div class="sidebar-brand">
+            <i class="fas fa-oil-can"></i>
+            <span>FuelSentinel</span>
+        </div>
+        <p class="sidebar-subtitle">Sistema de Monitoreo de Combustible</p>
+        <hr class="sidebar-divider">
+        <div class="sidebar-subtitle">Institución</div>
+        <p class="sidebar-subtitle" style="margin-bottom: 25px; font-size: 0.8rem;">ITSOEH - Departamento de TICs<br>Isai Montaño Chavez</p>
+        <hr class="sidebar-divider">
+        <div class="status-badge">
+            <div class="status-indicator"></div>
+            SISTEMA CONECTADO
+        </div>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
+        <div class="page-header">
+            <h1>
+                <i class="fas fa-tachometer-alt"></i>
+                Panel de Telemetría
+            </h1>
+            <p>Monitoreo en tiempo real de activos diesel • InnovaTecNM 2026</p>
+        </div>
+
+        <!-- MENU DE NAVEGACIÓN -->
+        <div class="menu-tabs">
+            <button class="menu-tab active" onclick="switchTab('node-red')">
+                <i class="fas fa-cogs"></i> Node-RED Control
+            </button>
+            <button class="menu-tab" onclick="switchTab('grafana')">
+                <i class="fas fa-chart-line"></i> Gráficas Grafana
+            </button>
+        </div>
+
+        <!-- SECCIÓN 1: NODE-RED -->
+        <div id="node-red" class="content-section active">
+            <div class="card-iot metrics-full">
+                <div class="card-iot-header">
+                    <h5>🔧 CONTROL Y AUTOMATIZACIÓN (Node-RED)</h5>
+                    <span class="card-iot-status">EN VIVO</span>
+                </div>
+                <iframe src="http://34.145.56.208:1880" height="600"></iframe>
+            </div>
+        </div>
+
+        <!-- SECCIÓN 2: GRAFANA -->
+        <div id="grafana" class="content-section">
+            <!-- MÉTRICAS Y GRÁFICOS -->
+            <div class="metrics-grid">
+                <!-- FLUJO RETORNO-IDA -->
+                <div class="card-iot">
+                    <div class="card-iot-header">
+                        <h5>📊 FLUJO RETORNO-IDA</h5>
+                        <span class="card-iot-status">EN VIVO</span>
+                    </div>
+                    <iframe src="http://34.145.56.208:3000/d-solo/adghngx/monitoreo?orgId=1&panelId=panel-4&theme=dark&kiosk" height="250"></iframe>
+                </div>
+
+                <!-- FLUJO EN TIEMPO REAL -->
+                <div class="card-iot">
+                    <div class="card-iot-header">
+                        <h5>⚡ FLUJO EN TIEMPO REAL</h5>
+                        <span class="card-iot-status">EN VIVO</span>
+                    </div>
+                    <iframe src="http://34.145.56.208:3000/d-solo/adghngx/monitoreo?orgId=1&panelId=panel-5&theme=dark&kiosk" height="250"></iframe>
+                </div>
+
+                <!-- CONSUMO DE DIÉSEL -->
+                <div class="card-iot">
+                    <div class="card-iot-header">
+                        <h5>🛢️ CONSUMO DE DIÉSEL</h5>
+                        <span class="card-iot-status">EN VIVO</span>
+                    </div>
+                    <iframe src="http://34.145.56.208:3000/d-solo/adghngx/monitoreo?orgId=1&panelId=panel-6&theme=dark&kiosk" height="250"></iframe>
+                </div>
+
+                <!-- ALERTAS Y EVENTOS -->
+                <div class="card-iot">
+                    <div class="card-iot-header">
+                        <h5>🚨 ALERTAS Y EVENTOS</h5>
+                        <span class="card-iot-status">EN VIVO</span>
+                    </div>
+                    <iframe src="http://34.145.56.208:3000/d-solo/adghngx/monitoreo?orgId=1&panelId=panel-7&theme=dark&kiosk" height="250"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Función para cambiar entre pestañas
+        function switchTab(tabName) {
+            // Ocultar todas las secciones
+            const sections = document.querySelectorAll('.content-section');
+            sections.forEach(section => {
+                section.classList.remove('active');
+            });
+
+            // Quitar clase active de todos los botones
+            const buttons = document.querySelectorAll('.menu-tab');
+            buttons.forEach(button => {
+                button.classList.remove('active');
+            });
+
+            // Mostrar la sección seleccionada
+            document.getElementById(tabName).classList.add('active');
+
+            // Activar el botón correspondiente
+            event.target.classList.add('active');
+        }
+
+        // Inicialización
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('FuelSentinel Dashboard cargado correctamente');
+        });
+    </script>
+</body>
+</html>
