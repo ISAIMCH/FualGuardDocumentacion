@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FuelGuard | Dashboard</title>
+    <script>
+        const session = localStorage.getItem('fuelguard_session');
+        window.location.replace(session ? 'Dashboar.html' : 'app.html');
+    </script>
+</head>
+<body>
+    <p>Redirigiendo al dashboard...</p>
+</body>
+</html>

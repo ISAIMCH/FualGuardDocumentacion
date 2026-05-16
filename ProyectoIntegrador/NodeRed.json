@@ -1,0 +1,1021 @@
+[
+    {
+        "id": "587a0111ca079dbc",
+        "type": "tab",
+        "label": "Piña",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "f880abf3a08b208e",
+        "type": "function",
+        "z": "587a0111ca079dbc",
+        "name": "function 8",
+        "func": "var datos = msg.payload;\n\n// 1. Asegurar que los datos sean un objeto JSON\nif (typeof datos === 'string') {\n  try {\n    datos = JSON.parse(datos);\n  } catch (e) {\n    node.error(\"Error parseando JSON de LilyGO\");\n  }\n}\n\n// 2. Extraer latitud y longitud (usando 'lng' como manda tu MQTT)\n// Si no hay datos, se queda en la última posición conocida o base\nlet lat = (datos && datos.lat !== undefined) ? Number(datos.lat) : 20.0283;\nlet lon = (datos && datos.lng !== undefined) ? Number(datos.lng) : -99.2250;\n\n// 3. Objeto para el Mapa (Marcador)\n// Nota: Eliminamos el objeto \"command\" para que el mapa NO se mueva solo\nmsg.payload = {\n  \"name\": \"Piña\",\n  \"lat\": lat,\n  \"lon\": lon,\n  \"icon\": \"truck\",\n  \"iconColor\": \"#FFC107\",\n  \"layer\": \"Unidades\"\n};\n\n// 4. Texto con diseño para el Dashboard (Ubicación azul arriba)\n// Usamos .toFixed(6) para captar la precisión real del GPS\nmsg.payload_text = `\n<div style=\"font-family:'Roboto Mono', monospace; color: rgb(68, 180, 255); font-size:14px;\">\n  <div style=\"display:flex; justify-content:space-between;\">\n    <span>Latitud:</span>\n    <b>${lat.toFixed(6)}</b> \n  </div>\n  <div style=\"display:flex; justify-content:space-between; margin-top:4px;\">\n    <span>Longitud:</span>\n    <b>${lon.toFixed(6)}</b>\n  </div>\n</div>\n`;\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 500,
+        "y": 1260,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "8b29cfccbb61804c",
+        "type": "function",
+        "z": "587a0111ca079dbc",
+        "name": "function 9",
+        "func": "var datos = msg.payload;\nif (typeof datos === 'string') datos = JSON.parse(datos);\n\nif (datos && datos.alerta !== undefined) {\n    if (datos.alerta == 1) {\n        msg.payload = \"CERRADA\";\n        msg.background = \"green\"; // Cerrada = Seguro\n    } else {\n        msg.payload = \"ABIERTA\";\n        msg.background = \"red\";   // Abierta = Alerta!\n    }\n} else {\n    msg.payload = \"SIN DATO\";\n}\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 320,
+        "y": 1260,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "45cec2dcd4d2848c",
+        "type": "inject",
+        "z": "587a0111ca079dbc",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "5",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 130,
+        "y": 480,
+        "wires": [
+            [
+                "c35012bb08fef63d"
+            ]
+        ]
+    },
+    {
+        "id": "4ee81ebf52d267e6",
+        "type": "inject",
+        "z": "587a0111ca079dbc",
+        "d": true,
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "5",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 90,
+        "y": 740,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "3c09f98183e4a07c",
+        "type": "function",
+        "z": "587a0111ca079dbc",
+        "name": "function 10",
+        "func": "// Forzar que msg.payload sea el número del flujo 1\nvar datos = msg.payload;\nif (typeof datos === 'string') datos = JSON.parse(datos);\n\nif (datos && datos.flujo1 !== undefined) {\n    msg.payload = Number(datos.flujo1); // <--- CAMBIO AQUÍ a flujo1\n} else {\n    msg.payload = 0;\n}\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 670,
+        "y": 1280,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "48c55df9c761b192",
+        "type": "switch",
+        "z": "587a0111ca079dbc",
+        "name": "",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "lte",
+                "v": "3",
+                "vt": "num"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 290,
+        "y": 1320,
+        "wires": [
+            [
+                "e5bc8a32a0c7a7e5"
+            ]
+        ]
+    },
+    {
+        "id": "e5bc8a32a0c7a7e5",
+        "type": "template",
+        "z": "587a0111ca079dbc",
+        "d": true,
+        "name": "Mensaje",
+        "field": "payload",
+        "fieldType": "msg",
+        "format": "handlebars",
+        "syntax": "mustache",
+        "template": "⚠️ ALERTA: Flujo detenido en Tanque. Revisar conexión de manguera.",
+        "output": "str",
+        "x": 300,
+        "y": 1380,
+        "wires": [
+            [
+                "b621de789846ee37"
+            ]
+        ]
+    },
+    {
+        "id": "3adaa06bb93783f4",
+        "type": "worldmap",
+        "z": "587a0111ca079dbc",
+        "name": "",
+        "lat": "19.75",
+        "lon": "-98.02",
+        "zoom": "5",
+        "layer": "EsriC",
+        "cluster": "",
+        "maxage": "",
+        "usermenu": "show",
+        "layers": "show",
+        "panit": "false",
+        "panlock": "false",
+        "zoomlock": "false",
+        "hiderightclick": "false",
+        "coords": "none",
+        "showgrid": "false",
+        "showruler": "false",
+        "allowFileDrop": "false",
+        "path": "/worldmap",
+        "overlist": "DR,CO,RA,DN",
+        "maplist": "OSMG,OSMC,EsriC,EsriS,UKOS",
+        "mapname": "",
+        "mapurl": "",
+        "mapopt": "",
+        "mapwms": false,
+        "x": 620,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "97f3243e0c145d97",
+        "type": "influxdb out",
+        "z": "587a0111ca079dbc",
+        "influxdb": "7a62c1921387d108",
+        "name": "InfluxDB",
+        "measurement": "monitoreo_diesel_tics",
+        "precision": "",
+        "retentionPolicy": "",
+        "database": "database",
+        "precisionV18FluxV20": "ms",
+        "retentionPolicyV18Flux": "",
+        "org": "ProyectoIoT",
+        "bucket": "SENSORES",
+        "x": 360,
+        "y": 420,
+        "wires": []
+    },
+    {
+        "id": "cfde5e3839cdd969",
+        "type": "mqtt in",
+        "z": "587a0111ca079dbc",
+        "name": "",
+        "topic": "itics/mgti/isai/sensor",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "d906b21b6c818d71",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 90,
+        "y": 240,
+        "wires": [
+            [
+                "c07d1bb09286b42f"
+            ]
+        ]
+    },
+    {
+        "id": "c07d1bb09286b42f",
+        "type": "json",
+        "z": "587a0111ca079dbc",
+        "name": "",
+        "property": "payload",
+        "action": "obj",
+        "pretty": false,
+        "x": 250,
+        "y": 240,
+        "wires": [
+            [
+                "af45366120a9b4f4",
+                "e6036442023698c2"
+            ]
+        ]
+    },
+    {
+        "id": "af45366120a9b4f4",
+        "type": "function",
+        "z": "587a0111ca079dbc",
+        "name": "function INFLUX",
+        "func": "const datos = msg.payload;\nif (!datos) return null;\n\n// 1. Variables primarias\nlet latReal = (datos.lat !== undefined) ? Number(datos.lat) : null;\nlet lonReal = (datos.lng !== undefined) ? Number(datos.lng) : null;\nconst reedReal = (datos.reed !== undefined) ? Number(datos.reed) : 0;\nconst flujo1Real = (datos.flujo1 !== undefined) ? Number(datos.flujo1) : 0;\nconst flujo2Real = (datos.flujo2 !== undefined) ? Number(datos.flujo2) : 0;\nconst statusReal = datos.status || \"OPERACION_NORMAL\";\n\n// 2. Calcular Consumo Neto\nconst consumoReal = Math.max(0, flujo1Real - flujo2Real);\n\n// 3. Respaldo Dinámico de Ubicación\nif (latReal === 0 || lonReal === 0 || latReal === null || lonReal === null) {\n    latReal = (datos.lat_sim !== undefined) ? Number(datos.lat_sim) : null;\n    lonReal = (datos.lon_sim !== undefined) ? Number(datos.lon_sim) : null;\n}\n\n// Bloqueo de seguridad si ningún GPS tiene datos coherentes\nif (latReal === null || lonReal === null || latReal === 0) {\n    node.warn(\"⚠️ Registro omitido en InfluxDB: Sin coordenadas de ubicación.\");\n    return null;\n}\n\n// 4. Estructurar payload para InfluxDB Out\nmsg.measurement = \"monitoreo_diesel_tics\";\nmsg.payload = [\n    {\n        latitud: latReal,\n        longitud: lonReal,\n        estado_tapa: reedReal,\n        caudal_flujo_ida: flujo1Real,       \n        caudal_flujo_retorno: flujo2Real,\n        consumo_actual: consumoReal         \n    },\n    {\n        unidad: \"Camion_Kiwi\",\n        propietario: \"Isai_TICS\",\n        sensor: \"Hardware_LilyGO_Real\",\n        diagnostico: statusReal\n    }\n];\n\nreturn msg;\n\n/* // 1. Capturar datos\nvar datos = msg.payload;\n\n// Asegurar que los datos sean un objeto JSON\nif (typeof datos === 'string') {\n    try {\n        datos = JSON.parse(datos);\n    } catch (e) {\n        node.error(\"Error parseando JSON\");\n        return null;\n    }\n}\n\n// 2. EXTRAER COORDENADAS REALES\nlet latReal = (datos && datos.lat !== undefined) ? Number(datos.lat) : null;\nlet lonReal = (datos && datos.lng !== undefined) ? Number(datos.lng) : null;\n\n// 3. EXTRAER OTROS DATOS \nlet alertaReal = (datos && datos.alerta !== undefined) ? Number(datos.alerta) : 0;\nlet flujo1Real = (datos && datos.flujo1 !== undefined) ? Number(datos.flujo1) : 0;\nlet flujo2Real = (datos && datos.flujo2 !== undefined) ? Number(datos.flujo2) : 0;\n\n// =========================================================\n// 🚀 NUEVO: CALCULAR EL CONSUMO (Diferencia de flujos)\n// Usamos Math.max para asegurarnos de que el resultado nunca sea menor a 0\nlet consumoReal = Math.max(0, flujo1Real - flujo2Real);\n// =========================================================\n\n// 4. VALIDACIÓN (evita coordenadas 0,0)\nif (latReal === 0 || lonReal === 0 || latReal === null || lonReal === null) {\n    node.warn(\"⚠️ Coordenadas invalidas, no se envia dato a InfluxDB\");\n    return null;\n}\n\n// 5. ESTRUCTURA PARA INFLUXDB\nmsg.measurement = \"monitoreo_diesel_tics\";\n\nmsg.payload = [\n    {\n        latitud: latReal,\n        longitud: lonReal,\n        estado_tapa: alertaReal,\n        caudal_flujo_ida: flujo1Real,       \n        caudal_flujo_retorno: flujo2Real,\n        consumo_actual: consumoReal         // <--- NUEVO CAMPO AGREGADO AQUÍ\n    },\n    {\n        unidad: \"Camion_Kiwi\",\n        propietario: \"Isai_TICS\",\n        sensor: \"Hardware_LilyGO_Real\"\n    }\n];\n\nreturn msg;*/",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 140,
+        "y": 420,
+        "wires": [
+            [
+                "97f3243e0c145d97",
+                "c35012bb08fef63d"
+            ]
+        ]
+    },
+    {
+        "id": "092c16f52836da68",
+        "type": "ui-text",
+        "z": "587a0111ca079dbc",
+        "group": "f0278aae884f6b81",
+        "order": 2,
+        "width": 6,
+        "height": 1,
+        "name": "",
+        "label": "Estado de la tapa:",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "style": true,
+        "font": "Arial Black,Arial Black,Gadget,sans-serif",
+        "fontSize": "15",
+        "color": "#ffffff",
+        "wrapText": false,
+        "className": "",
+        "value": "payload",
+        "valueType": "msg",
+        "x": 650,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "dd9cadddccf90017",
+        "type": "ui-text",
+        "z": "587a0111ca079dbc",
+        "group": "838242c44eb0d5ca",
+        "order": 1,
+        "width": 6,
+        "height": 1,
+        "name": "GPS",
+        "label": "Ubicación",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "style": true,
+        "font": "Arial Black,Arial Black,Gadget,sans-serif",
+        "fontSize": "15",
+        "color": "#ffffff",
+        "wrapText": false,
+        "className": "",
+        "value": "payload_text",
+        "valueType": "msg",
+        "x": 610,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "8f141b1374bf93e5",
+        "type": "ui-chart",
+        "z": "587a0111ca079dbc",
+        "group": "f0278aae884f6b81",
+        "name": "",
+        "label": "Flujo - Ida",
+        "order": 4,
+        "chartType": "line",
+        "category": "topic",
+        "categoryType": "msg",
+        "xAxisLabel": "",
+        "xAxisProperty": "",
+        "xAxisPropertyType": "timestamp",
+        "xAxisType": "category",
+        "xAxisFormat": "",
+        "xAxisFormatType": "auto",
+        "xmin": "",
+        "xmax": "",
+        "yAxisLabel": "",
+        "yAxisProperty": "payload",
+        "yAxisPropertyType": "msg",
+        "ymin": "",
+        "ymax": "",
+        "bins": 10,
+        "action": "append",
+        "stackSeries": false,
+        "pointShape": "crossRot",
+        "pointRadius": 4,
+        "showLegend": false,
+        "removeOlder": 1,
+        "removeOlderUnit": "3600",
+        "removeOlderPoints": "",
+        "colors": [
+            "#0095ff",
+            "#ff0000",
+            "#ff7f0e",
+            "#2ca02c",
+            "#a347e1",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "textColor": [
+            "#666666"
+        ],
+        "textColorDefault": true,
+        "gridColor": [
+            "#e5e5e5"
+        ],
+        "gridColorDefault": true,
+        "width": 4,
+        "height": 3,
+        "className": "",
+        "interpolation": "linear",
+        "x": 620,
+        "y": 240,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "b621de789846ee37",
+        "type": "ui-notification",
+        "z": "587a0111ca079dbc",
+        "d": true,
+        "ui": "f86967943e4ffb42",
+        "position": "top right",
+        "colorDefault": false,
+        "color": "#c50202",
+        "displayTime": "5",
+        "showCountdown": true,
+        "outputs": 1,
+        "allowDismiss": true,
+        "dismissText": "Close",
+        "allowConfirm": false,
+        "confirmText": "Confirm",
+        "raw": true,
+        "className": "",
+        "name": "Alerta",
+        "x": 290,
+        "y": 1440,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "2361483f10c28fe7",
+        "type": "ui-template",
+        "z": "587a0111ca079dbc",
+        "group": "838242c44eb0d5ca",
+        "page": "",
+        "ui": "",
+        "name": "",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "head": "",
+        "format": "<iframe src=\"/worldmap\" style=\"width:100%; height:450px; border:none;\"></iframe>",
+        "storeOutMessages": true,
+        "passthru": true,
+        "resendOnRefresh": true,
+        "templateScope": "local",
+        "className": "",
+        "x": 760,
+        "y": 120,
+        "wires": [
+            [
+                "3adaa06bb93783f4"
+            ]
+        ]
+    },
+    {
+        "id": "7a85605199bb52a6",
+        "type": "ui-gauge",
+        "z": "587a0111ca079dbc",
+        "name": "",
+        "group": "f0278aae884f6b81",
+        "order": 3,
+        "value": "payload",
+        "valueType": "msg",
+        "width": 2,
+        "height": 3,
+        "gtype": "gauge-half",
+        "gstyle": "needle",
+        "title": "Flujo-Ida",
+        "alwaysShowTitle": false,
+        "floatingTitlePosition": "top-left",
+        "units": "units",
+        "icon": "",
+        "prefix": "",
+        "suffix": "",
+        "segments": [
+            {
+                "from": "0",
+                "color": "#d66e5c",
+                "text": "",
+                "textType": "label"
+            },
+            {
+                "from": "2",
+                "color": "#53ea55",
+                "text": "",
+                "textType": "label"
+            }
+        ],
+        "min": 0,
+        "max": "30",
+        "sizeThickness": 16,
+        "sizeGap": 4,
+        "sizeKeyThickness": 8,
+        "styleRounded": true,
+        "styleGlow": false,
+        "className": "",
+        "x": 620,
+        "y": 280,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "c35012bb08fef63d",
+        "type": "debug",
+        "z": "587a0111ca079dbc",
+        "name": "debug 1",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 360,
+        "y": 480,
+        "wires": []
+    },
+    {
+        "id": "d6e33af1928f3165",
+        "type": "ui-gauge",
+        "z": "587a0111ca079dbc",
+        "name": "",
+        "group": "f0278aae884f6b81",
+        "order": 5,
+        "value": "payload",
+        "valueType": "msg",
+        "width": 2,
+        "height": 3,
+        "gtype": "gauge-half",
+        "gstyle": "needle",
+        "title": "Flujo-Retorno",
+        "alwaysShowTitle": false,
+        "floatingTitlePosition": "top-left",
+        "units": "units",
+        "icon": "",
+        "prefix": "",
+        "suffix": "",
+        "segments": [
+            {
+                "from": "0",
+                "color": "#d66e5c",
+                "text": "",
+                "textType": "label"
+            },
+            {
+                "from": "2",
+                "color": "#53ea55",
+                "text": "",
+                "textType": "label"
+            }
+        ],
+        "min": 0,
+        "max": "30",
+        "sizeThickness": 16,
+        "sizeGap": 4,
+        "sizeKeyThickness": 8,
+        "styleRounded": true,
+        "styleGlow": false,
+        "className": "",
+        "x": 640,
+        "y": 380,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "432d45773732e507",
+        "type": "function",
+        "z": "587a0111ca079dbc",
+        "name": "function 10-2",
+        "func": "// Forzar que msg.payload sea el número del flujo 2\nvar datos = msg.payload;\nif (typeof datos === 'string') datos = JSON.parse(datos);\n\nif (datos && datos.flujo2 !== undefined) {\n    msg.payload = Number(datos.flujo2); // Extraemos flujo2\n} else {\n    msg.payload = 0;\n}\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 150,
+        "y": 1260,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "6f5e3ca4087c40d6",
+        "type": "ui-chart",
+        "z": "587a0111ca079dbc",
+        "group": "f0278aae884f6b81",
+        "name": "",
+        "label": "Flujo - Retorno",
+        "order": 6,
+        "chartType": "line",
+        "category": "topic",
+        "categoryType": "msg",
+        "xAxisLabel": "",
+        "xAxisProperty": "",
+        "xAxisPropertyType": "timestamp",
+        "xAxisType": "category",
+        "xAxisFormat": "",
+        "xAxisFormatType": "auto",
+        "xmin": "",
+        "xmax": "",
+        "yAxisLabel": "",
+        "yAxisProperty": "payload",
+        "yAxisPropertyType": "msg",
+        "ymin": "",
+        "ymax": "",
+        "bins": 10,
+        "action": "append",
+        "stackSeries": false,
+        "pointShape": "crossRot",
+        "pointRadius": 4,
+        "showLegend": false,
+        "removeOlder": 1,
+        "removeOlderUnit": "3600",
+        "removeOlderPoints": "",
+        "colors": [
+            "#0095ff",
+            "#ff0000",
+            "#ff7f0e",
+            "#2ca02c",
+            "#a347e1",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "textColor": [
+            "#666666"
+        ],
+        "textColorDefault": true,
+        "gridColor": [
+            "#e5e5e5"
+        ],
+        "gridColorDefault": true,
+        "width": 4,
+        "height": 3,
+        "className": "",
+        "interpolation": "linear",
+        "x": 640,
+        "y": 340,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "17298369ef9a5351",
+        "type": "ui-dropdown",
+        "z": "587a0111ca079dbc",
+        "d": true,
+        "group": "60cf0a180c885ae8",
+        "name": "",
+        "label": "Select Option:",
+        "tooltip": "",
+        "order": 1,
+        "width": 8,
+        "height": 0,
+        "passthru": false,
+        "multiple": false,
+        "chips": false,
+        "clearable": false,
+        "options": [
+            {
+                "label": "Ultima hora",
+                "value": "range(start: -1h)",
+                "type": "str"
+            },
+            {
+                "label": "Turno Hoy",
+                "value": "range(start: today()) |> hourSelection(start: 7, stop: 22)",
+                "type": "str"
+            },
+            {
+                "label": "Total Hoy",
+                "value": "range(start: today())",
+                "type": "str"
+            },
+            {
+                "label": "Últimos 7 días",
+                "value": "range(start: -7d)",
+                "type": "str"
+            }
+        ],
+        "payload": "",
+        "topic": "topic",
+        "topicType": "msg",
+        "className": "",
+        "typeIsComboBox": true,
+        "msgTrigger": "onChange",
+        "x": 120,
+        "y": 660,
+        "wires": [
+            [
+                "308fd2c85f03bdcc"
+            ]
+        ]
+    },
+    {
+        "id": "308fd2c85f03bdcc",
+        "type": "function",
+        "z": "587a0111ca079dbc",
+        "name": "function 2",
+        "func": "let fluxTimeFilter = msg.payload;\n\nmsg.query = `\nfrom(bucket: \"SENSORES\")\n  |> ${fluxTimeFilter}\n  |> filter(fn: (r) => r._measurement == \"monitoreo_diesel_tics\")\n  |> filter(fn: (r) => r._field == \"consumo_actual\")\n  |> sum()\n`;\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 280,
+        "y": 660,
+        "wires": [
+            [
+                "8ee8f6c305a51bae"
+            ]
+        ]
+    },
+    {
+        "id": "8ee8f6c305a51bae",
+        "type": "influxdb in",
+        "z": "587a0111ca079dbc",
+        "influxdb": "7a62c1921387d108",
+        "name": "",
+        "query": "",
+        "rawOutput": false,
+        "precision": "",
+        "retentionPolicy": "",
+        "org": "ProyectoIoT",
+        "x": 440,
+        "y": 660,
+        "wires": [
+            [
+                "6743a284d1e4ba1b"
+            ]
+        ]
+    },
+    {
+        "id": "6743a284d1e4ba1b",
+        "type": "function",
+        "z": "587a0111ca079dbc",
+        "name": "function 3",
+        "func": "if (msg.payload && msg.payload.length > 0) {\n    // Extraemos el valor del resultado de InfluxDB\n    let total = msg.payload[0]._value;\n    msg.payload = total.toFixed(2) + \" Litros\";\n} else {\n    msg.payload = \"0 Litros\";\n}\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 600,
+        "y": 660,
+        "wires": [
+            [
+                "e7a4d145113b7273"
+            ]
+        ]
+    },
+    {
+        "id": "e7a4d145113b7273",
+        "type": "ui-text",
+        "z": "587a0111ca079dbc",
+        "d": true,
+        "group": "60cf0a180c885ae8",
+        "order": 2,
+        "width": 4,
+        "height": 0,
+        "name": "",
+        "label": "Gasto Real: ",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#717171",
+        "wrapText": false,
+        "className": "",
+        "value": "payload",
+        "valueType": "msg",
+        "x": 770,
+        "y": 660,
+        "wires": []
+    },
+    {
+        "id": "e6036442023698c2",
+        "type": "function",
+        "z": "587a0111ca079dbc",
+        "name": "function 1",
+        "func": "const datos = msg.payload;\nif (!datos) return null;\n\n// 1. Extraer variables del JSON de la LilyGO\nconst f1 = Number(datos.flujo1 || 0);\nconst f2 = Number(datos.flujo2 || 0);\n\n// ¡CORRECCIÓN CRÍTICA! Cambiamos el valor por defecto a 1 (CERRADA).\n// Si el dato se pierde en la red, no disparará una falsa alarma visual.\nconst reed = Number(datos.reed !== undefined ? datos.reed : 1); \nconst status = datos.status || \"OPERACION_NORMAL\";\n\n// 2. Fusión de Coordenadas (GPS Tanque con respaldo de GPS Cabina)\nlet lat = Number(datos.lat || 0);\nlet lon = Number(datos.lng || 0);\nif (lat === 0 || lon === 0) {\n    lat = Number(datos.lat_sim || 20.0283); // Coordenada base si no hay señal\n    lon = Number(datos.lon_sim || -99.2250);\n}\n\n// =========================================================\n// 📤 CONFIGURACIÓN DE LAS 5 SALIDAS DEL NODO\n// =========================================================\n\n// --- SALIDA 1: Ubicación (Para el Mapa y Texto Azul) ---\nconst msgMap = {\n    payload: { \"name\": \"Piña\", \"lat\": lat, \"lon\": lon, \"icon\": \"truck\", \"iconColor\": \"#FFC107\", \"layer\": \"Unidades\" },\n    payload_text: `\n    <div style=\"font-family:'Roboto Mono', monospace; color: rgb(68, 180, 255); font-size:14px;\">\n      <div style=\"display:flex; justify-content:space-between;\">\n        <span>Latitud:</span>\n        <b>${lat.toFixed(6)}</b> \n      </div>\n      <div style=\"display:flex; justify-content:space-between; margin-top:4px;\">\n        <span>Longitud:</span>\n        <b>${lon.toFixed(6)}</b>\n      </div>\n    </div>`\n};\n\n// --- SALIDA 2: Estado de la Tapa (CON FAILSAFE INTELIGENTE) ---\nlet textoTapa = (reed === 1) ? \"CERRADA\" : \"ABIERTA\";\nlet colorTapa = (reed === 1) ? \"green\" : \"red\";\n\n// FAILSAFE: Si la LilyGO reporta que todo está normal o el camión está apagado, \n// sabemos físicamente que no hay robos. Forzamos el widget a CERRADA \n// para destrabar la alerta en la pantalla.\nif (status === \"OPERACION_NORMAL\" || status === \"APAGADO_SEGURO\") {\n    textoTapa = \"CERRADA\";\n    colorTapa = \"green\";\n}\n\nconst msgTapa = {\n    payload: textoTapa,\n    background: colorTapa\n};\n\n// --- SALIDA 3: Flujo Ida ---\nconst msgIda = { payload: f1 };\n\n// --- SALIDA 4: Flujo Retorno ---\nconst msgRetorno = { payload: f2 };\n\n// --- SALIDA 5: Diagnóstico del Sistema y Alertas Emergentes ---\nlet uiColor = \"#2ECC71\"; // Verde (Normal)\nlet dispararNotificacion = null;\n\nif (status.startsWith(\"ALERTA\")) {\n    uiColor = \"#FF3333\"; // Rojo (Robo/Sabotaje)\n    // Si es alerta, preparamos el mensaje para la notificación flotante\n    dispararNotificacion = { payload: \"🚨 ¡ATENCIÓN! Anomalía: \" + status.replace(/_/g, \" \") };\n} else if (status === \"APAGADO_SEGURO\") {\n    uiColor = \"#8A8A8A\"; // Gris (Motor apagado)\n}\n\nconst msgStatus = {\n    payload: status.replace(/_/g, \" \"),\n    color: uiColor\n};\n\n// Retornamos el arreglo ordenado hacia los conectores físicos del nodo\nreturn [\n    msgMap, \n    msgTapa, \n    msgIda, \n    msgRetorno, \n    [msgStatus, dispararNotificacion]\n];",
+        "outputs": 5,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 400,
+        "y": 240,
+        "wires": [
+            [
+                "3adaa06bb93783f4",
+                "dd9cadddccf90017"
+            ],
+            [
+                "092c16f52836da68"
+            ],
+            [
+                "8f141b1374bf93e5",
+                "7a85605199bb52a6"
+            ],
+            [
+                "6f5e3ca4087c40d6",
+                "d6e33af1928f3165"
+            ],
+            [
+                "8a88766229375b82",
+                "7bf771a24d73f7f7"
+            ]
+        ]
+    },
+    {
+        "id": "8a88766229375b82",
+        "type": "ui-text",
+        "z": "587a0111ca079dbc",
+        "group": "f0278aae884f6b81",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Alertas:",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "style": true,
+        "font": "Arial Black,Arial Black,Gadget,sans-serif",
+        "fontSize": "15",
+        "color": "#ffffff",
+        "wrapText": false,
+        "className": "",
+        "value": "payload",
+        "valueType": "msg",
+        "x": 620,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "7bf771a24d73f7f7",
+        "type": "ui-notification",
+        "z": "587a0111ca079dbc",
+        "ui": "f86967943e4ffb42",
+        "position": "top right",
+        "colorDefault": true,
+        "color": "#000000",
+        "displayTime": "3",
+        "showCountdown": true,
+        "outputs": 1,
+        "allowDismiss": true,
+        "dismissText": "Close",
+        "allowConfirm": false,
+        "confirmText": "Confirm",
+        "raw": false,
+        "className": "",
+        "name": "",
+        "x": 650,
+        "y": 480,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "7a62c1921387d108",
+        "type": "influxdb",
+        "hostname": "127.0.0.1",
+        "port": 8086,
+        "protocol": "http",
+        "database": "database",
+        "name": "Monitoreo",
+        "usetls": false,
+        "tls": "",
+        "influxdbVersion": "2.0",
+        "url": "http://localhost:8086",
+        "timeout": 10,
+        "rejectUnauthorized": false
+    },
+    {
+        "id": "d906b21b6c818d71",
+        "type": "mqtt-broker",
+        "name": "HiveMQ",
+        "broker": "broker.hivemq.com",
+        "port": 1883,
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": 4,
+        "keepalive": 60,
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "f0278aae884f6b81",
+        "type": "ui-group",
+        "name": "Piña",
+        "page": "c95dd9392c8642ae",
+        "width": 6,
+        "height": 1,
+        "order": 1,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "838242c44eb0d5ca",
+        "type": "ui-group",
+        "name": "Mapa",
+        "page": "c95dd9392c8642ae",
+        "width": 6,
+        "height": 1,
+        "order": 3,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "f86967943e4ffb42",
+        "type": "ui-base",
+        "name": "My Dashboard",
+        "path": "/dashboard",
+        "appIcon": "",
+        "includeClientData": true,
+        "acceptsClientConfig": [
+            "ui-notification",
+            "ui-control"
+        ],
+        "showPathInSidebar": false,
+        "headerContent": "page",
+        "navigationStyle": "default",
+        "titleBarStyle": "default",
+        "showReconnectNotification": true,
+        "notificationDisplayTime": 1,
+        "showDisconnectNotification": true,
+        "allowInstall": false
+    },
+    {
+        "id": "60cf0a180c885ae8",
+        "type": "ui-group",
+        "name": "Consumo Real",
+        "page": "c95dd9392c8642ae",
+        "width": 12,
+        "height": 1,
+        "order": 4,
+        "showTitle": true,
+        "className": "",
+        "visible": false,
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "c95dd9392c8642ae",
+        "type": "ui-page",
+        "name": "Monitoreo",
+        "ui": "f86967943e4ffb42",
+        "path": "/page2",
+        "icon": "home",
+        "layout": "grid",
+        "theme": "e0797b36b63e316b",
+        "breakpoints": [
+            {
+                "name": "Default",
+                "px": "0",
+                "cols": "3"
+            },
+            {
+                "name": "Tablet",
+                "px": "576",
+                "cols": "6"
+            },
+            {
+                "name": "Small Desktop",
+                "px": "768",
+                "cols": "9"
+            },
+            {
+                "name": "Desktop",
+                "px": "1024",
+                "cols": "12"
+            }
+        ],
+        "order": 1,
+        "className": "",
+        "visible": true,
+        "disabled": false
+    },
+    {
+        "id": "e0797b36b63e316b",
+        "type": "ui-theme",
+        "name": "Default Theme",
+        "colors": {
+            "surface": "#0b1423",
+            "primary": "#00a8ff",
+            "bgPage": "#0b1423",
+            "groupBg": "#162235",
+            "groupOutline": "#1c2c44"
+        },
+        "sizes": {
+            "density": "default",
+            "pagePadding": "12px",
+            "groupGap": "12px",
+            "groupBorderRadius": "4px",
+            "widgetGap": "12px"
+        }
+    },
+    {
+        "id": "26dd095f61ee35b4",
+        "type": "global-config",
+        "env": [],
+        "modules": {
+            "node-red-contrib-web-worldmap": "5.6.2",
+            "node-red-contrib-influxdb": "0.7.0",
+            "@flowfuse/node-red-dashboard": "1.30.2"
+        }
+    }
+]

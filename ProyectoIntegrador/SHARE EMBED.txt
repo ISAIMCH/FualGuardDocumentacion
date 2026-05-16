@@ -1,0 +1,12 @@
+SHARE EMBED
+Flujo-Retorno-Ida 
+<iframe src="http://34.145.56.208:3000/d-solo/adghngx/monitoreo?orgId=1&from=1778965423228&to=1778965723228&timezone=browser&showCategory=panel-options-override-0&tab=queries&panelId=panel-4&__feature.dashboardScene=true" width="450" height="200" frameborder="0"></iframe>
+
+Flujo-Real
+<iframe src="http://34.145.56.208:3000/d-solo/adghngx/monitoreo?orgId=1&from=1778965423228&to=1778965723228&timezone=browser&showCategory=panel-options-override-0&tab=queries&panelId=panel-2&__feature.dashboardScene=true" width="450" height="200" frameborder="0"></iframe>
+
+Estado de la tapa
+<iframe src="http://34.145.56.208:3000/d-solo/adghngx/monitoreo?orgId=1&from=1778965423228&to=1778965723228&timezone=browser&showCategory=panel-options-override-0&tab=queries&panelId=panel-3&__feature.dashboardScene=true" width="450" height="200" frameborder="0"></iframe>
+
+Mapa
+<iframe src="http://34.145.56.208:3000/d-solo/adghngx/monitoreo?orgId=1&from=1778965423228&to=1778965723228&timezone=browser&showCategory=panel-options-override-0&tab=queries&panelId=panel-1&__feature.dashboardScene=true" width="450" height="200" frameborder="0"></iframe>

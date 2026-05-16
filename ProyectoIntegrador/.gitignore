@@ -1,0 +1,149 @@
+# Git Ignore - FuelGuard
+
+# Sistema operativo
+*.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# Arduino IDE
+*.hex
+*.elf
+*.bin
+*.o
+*.a
+build/
+.build/
+
+# Compilación y construcción
+*.out
+*.app
+*.exe
+*.dll
+*.so
+*.dylib
+
+# IDEs y editores
+.vscode/
+.vscode-server/
+.idea/
+*.sublime-project
+*.sublime-workspace
+*.swp
+*.swo
+*~
+.project
+.cproject
+.classpath
+*.class
+
+# Dependencias y paquetes
+node_modules/
+dist/
+build/
+*.egg-info/
+__pycache__/
+*.pyc
+*.pyo
+
+# Credenciales y secretos (¡IMPORTANTE!)
+config.local.js
+.env
+.env.local
+.env.*.local
+secrets.txt
+credentials.json
+*.key
+*.pem
+*.p12
+*.pfx
+
+# Datos locales
+*.db
+*.sqlite
+*.sqlite3
+*.log
+logs/
+*.tmp
+temp/
+*.cache
+
+# Resultados de pruebas
+coverage/
+.nyc_output/
+dist/test/
+
+# Documentos del usuario
+*.pdf
+*.docx
+*.xlsx
+personal/
+private/
+
+# Archivos del sistema
+.lock
+*.lock
+yarn.lock
+package-lock.json
+
+# Arduino específico
+libraries/
+cores/
+hardware/
+sketches/*/build
+sketches/*/debug
+
+# Herramientas de desarrollo
+.git/
+.gitkeep
+.gitmodules
+
+# Documentos locales (notas personales)
+NOTAS.md
+TODO.md
+BORRADOR/
+
+# Directorios grandes
+data/
+backups/
+archives/
+
+# Archivos temporales de sistema
+*.tmp
+*.temp
+*.bak
+*.swp
+
+# Node-RED
+node_modules/
+flows.json.backup
+
+# Grafana
+grafana/data/
+grafana/provisioning/
+
+# Docker
+.dockerignore
+docker-compose.override.yml
+
+# Copias de seguridad
+*.backup
+*.old
+*.bak~
+*~
+
+# Archivos específicos de plataformas
+Makefile.local
+build.local.sh
+
+# Excepciones (archivos QUE SÍ queremos en Git)
+!.gitkeep
+!.gitignore
+!.github/
+!README.md
+!CHANGELOG.md
+!LICENSE.md

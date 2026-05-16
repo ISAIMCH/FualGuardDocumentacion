@@ -1,0 +1,1006 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FuelGuard | Protección inteligente de combustible</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg: #07111f;
+            --surface: rgba(255, 255, 255, 0.06);
+            --text: #f5f7fb;
+            --muted: #a7b3c7;
+            --line: rgba(255, 255, 255, 0.12);
+            --brand: #ff7a18;
+            --brand-2: #ffb21e;
+            --accent: #31c48d;
+            --shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background:
+                radial-gradient(circle at top left, rgba(255, 122, 24, 0.18), transparent 30%),
+                radial-gradient(circle at top right, rgba(49, 196, 141, 0.15), transparent 28%),
+                linear-gradient(180deg, #050b14 0%, var(--bg) 35%, #08111d 100%);
+            color: var(--text);
+            overflow-x: hidden;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .wrap {
+            width: min(1180px, calc(100% - 32px));
+            margin: 0 auto;
+        }
+
+        .topbar {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(16px);
+            background: rgba(5, 11, 20, 0.72);
+            border-bottom: 1px solid var(--line);
+        }
+
+        .topbar-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            padding: 18px 0;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 900;
+            letter-spacing: -0.04em;
+            font-size: 1.15rem;
+        }
+
+        .brand-mark {
+            width: 42px;
+            height: 42px;
+            border-radius: 14px;
+            display: grid;
+            place-items: center;
+            background: linear-gradient(135deg, var(--brand) 0%, var(--brand-2) 100%);
+            color: #0b1320;
+            box-shadow: 0 10px 24px rgba(255, 122, 24, 0.35);
+            flex: 0 0 auto;
+        }
+
+        .nav {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
+        .nav a {
+            padding: 10px 14px;
+            color: var(--muted);
+            border-radius: 999px;
+            transition: 0.25s ease;
+            font-weight: 600;
+        }
+
+        .nav a:hover {
+            color: white;
+            background: rgba(255, 255, 255, 0.06);
+        }
+
+        .hero {
+            padding: 76px 0 28px;
+        }
+
+        .hero-grid {
+            display: grid;
+            grid-template-columns: 1.1fr 0.9fr;
+            gap: 28px;
+            align-items: center;
+            min-height: calc(100vh - 140px);
+        }
+
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 16px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 999px;
+            color: #d8e2f2;
+            font-size: 0.92rem;
+            margin-bottom: 22px;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.8rem, 6vw, 5.5rem);
+            line-height: 0.95;
+            letter-spacing: -0.06em;
+            margin-bottom: 20px;
+            max-width: 11ch;
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, var(--brand) 0%, var(--brand-2) 55%, #ffe48a 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .hero p {
+            color: #d2d9e5;
+            font-size: 1.1rem;
+            line-height: 1.7;
+            max-width: 62ch;
+        }
+
+        .hero-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
+            margin-top: 28px;
+        }
+
+        .btn-primary,
+        .btn-secondary {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 15px 22px;
+            border-radius: 16px;
+            font-weight: 800;
+            transition: 0.25s ease;
+            border: 1px solid transparent;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--brand) 0%, #ff972f 100%);
+            color: #09111d;
+            box-shadow: 0 18px 42px rgba(255, 122, 24, 0.32);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 24px 54px rgba(255, 122, 24, 0.4);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.04);
+            color: white;
+            border-color: rgba(255, 255, 255, 0.14);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.09);
+            transform: translateY(-2px);
+        }
+
+        .hero-panel {
+            position: relative;
+            border-radius: 28px;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            padding: 22px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        .hero-panel::before {
+            content: '';
+            position: absolute;
+            inset: auto -30% -35% auto;
+            width: 280px;
+            height: 280px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255, 122, 24, 0.22) 0%, transparent 70%);
+        }
+
+        .panel-card {
+            position: relative;
+            z-index: 1;
+            border-radius: 22px;
+            background: rgba(6, 12, 22, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 20px;
+        }
+
+        .panel-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+            margin-bottom: 18px;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 9px 14px;
+            border-radius: 999px;
+            background: rgba(49, 196, 141, 0.12);
+            color: #91f0c8;
+            font-size: 0.85rem;
+            font-weight: 700;
+        }
+
+        .pulse-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--accent);
+            box-shadow: 0 0 0 0 rgba(49, 196, 141, 0.6);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(49, 196, 141, 0.55); }
+            70% { box-shadow: 0 0 0 14px rgba(49, 196, 141, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(49, 196, 141, 0); }
+        }
+
+        .meter-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 14px;
+        }
+
+        .meter {
+            border-radius: 18px;
+            padding: 18px;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.03));
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .meter .label {
+            color: var(--muted);
+            font-size: 0.88rem;
+            margin-bottom: 10px;
+        }
+
+        .meter .value {
+            font-size: 1.8rem;
+            font-weight: 900;
+            letter-spacing: -0.05em;
+        }
+
+        .meter .hint {
+            color: #95a3b7;
+            font-size: 0.82rem;
+            margin-top: 8px;
+        }
+
+        .section {
+            padding: 86px 0;
+        }
+
+        .section-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: end;
+            gap: 24px;
+            margin-bottom: 34px;
+        }
+
+        .section-head h2 {
+            font-size: clamp(2rem, 4vw, 3.1rem);
+            line-height: 1;
+            letter-spacing: -0.05em;
+        }
+
+        .section-head p {
+            max-width: 60ch;
+            color: var(--muted);
+            line-height: 1.7;
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+        }
+
+        .card {
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.05));
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 22px;
+            padding: 24px;
+            box-shadow: var(--shadow);
+        }
+
+        .card i {
+            font-size: 1.4rem;
+            color: var(--brand-2);
+            margin-bottom: 14px;
+        }
+
+        .card h3 {
+            font-size: 1.12rem;
+            margin-bottom: 10px;
+        }
+
+        .card p {
+            color: var(--muted);
+            line-height: 1.7;
+            font-size: 0.96rem;
+        }
+
+        .split {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            align-items: start;
+        }
+
+        .glass {
+            border-radius: 26px;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.05));
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 28px;
+            box-shadow: var(--shadow);
+        }
+
+        .list {
+            list-style: none;
+            display: grid;
+            gap: 14px;
+        }
+
+        .list li {
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+            color: #d8e0ee;
+            line-height: 1.6;
+        }
+
+        .list i {
+            color: var(--accent);
+            margin-top: 4px;
+        }
+
+        .timeline {
+            display: grid;
+            gap: 16px;
+        }
+
+        .timeline-item {
+            display: grid;
+            grid-template-columns: 52px 1fr;
+            gap: 16px;
+            align-items: start;
+            padding: 18px;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .timeline-number {
+            width: 52px;
+            height: 52px;
+            border-radius: 18px;
+            display: grid;
+            place-items: center;
+            background: linear-gradient(135deg, var(--brand) 0%, var(--brand-2) 100%);
+            color: #09111d;
+            font-weight: 900;
+        }
+
+        .timeline-item h3 {
+            margin-bottom: 6px;
+        }
+
+        .timeline-item p {
+            color: var(--muted);
+            line-height: 1.6;
+        }
+
+        .proof-strip {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 14px;
+            margin-top: 24px;
+        }
+
+        .proof {
+            padding: 18px;
+            border-radius: 18px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            text-align: center;
+        }
+
+        .proof strong {
+            display: block;
+            font-size: 1.45rem;
+            margin-bottom: 6px;
+        }
+
+        .cta-band {
+            padding: 24px;
+            border-radius: 28px;
+            background: linear-gradient(135deg, rgba(255, 122, 24, 0.18), rgba(49, 196, 141, 0.14));
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            box-shadow: var(--shadow);
+        }
+
+        .cta-band h2 {
+            font-size: 2.3rem;
+            margin-bottom: 10px;
+        }
+
+        .cta-band p {
+            color: #d6deeb;
+            line-height: 1.7;
+            max-width: 64ch;
+        }
+
+        .footer {
+            padding: 28px 0 40px;
+            color: #8fa0b8;
+            border-top: 1px solid var(--line);
+            margin-top: 24px;
+        }
+
+        .footer-inner {
+            display: flex;
+            justify-content: space-between;
+            gap: 18px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        @media (max-width: 960px) {
+            .hero-grid,
+            .split,
+            .cards,
+            .proof-strip {
+                grid-template-columns: 1fr;
+            }
+
+            .section-head,
+            .topbar-inner,
+            .footer-inner {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .hero {
+                padding-top: 48px;
+            }
+
+            .hero-grid {
+                min-height: auto;
+                padding: 36px 0 10px;
+            }
+
+            .nav {
+                justify-content: flex-start;
+            }
+
+            .meter-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 560px) {
+            .wrap {
+                width: min(100% - 20px, 1180px);
+            }
+
+            .hero h1 {
+                max-width: 100%;
+            }
+
+            .btn-primary,
+            .btn-secondary {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .hero-actions {
+                flex-direction: column;
+            }
+
+            .card,
+            .glass,
+            .hero-panel {
+                border-radius: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="topbar">
+        <div class="wrap topbar-inner" id="top">
+            <div class="brand">
+                <div class="brand-mark"><i class="fa-solid fa-shield-halved"></i></div>
+                <div>
+                    <div>FuelGuard</div>
+                    <div style="font-size:0.82rem;color:var(--muted);font-weight:600;">Protección inteligente de combustible</div>
+                </div>
+            </div>
+            <nav class="nav" aria-label="Secciones">
+                <a href="#solucion">Solución</a>
+                <a href="#beneficios">Beneficios</a>
+                <a href="#como-funciona">Cómo funciona</a>
+                <a href="#tecnologia">Tecnología</a>
+                <a href="#contacto">Contacto</a>
+                <a href="#" id="authOpenBtn" class="btn-secondary" style="padding:10px 16px;">Ingresar</a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="wrap hero-grid">
+                <div>
+                    <div class="eyebrow"><i class="fa-solid fa-bolt"></i> Vigilancia en tiempo real para flotillas y transporte</div>
+                    <h1>Protege cada litro con <span class="gradient-text">FuelGuard</span></h1>
+                    <p>
+                        FuelGuard es un prototipo de monitoreo inteligente que ayuda a detectar pérdidas, aperturas no autorizadas y consumos anormales de combustible.
+                        Fue pensado para dueños de flotillas, transportistas y empresas que quieren cuidar su operación sin complicarse con tecnología.
+                    </p>
+                    <div class="hero-actions">
+                        <a class="btn-primary" href="#contacto"><i class="fa-solid fa-paper-plane"></i> Solicitar presentación</a>
+                        <a class="btn-secondary" href="#solucion"><i class="fa-solid fa-circle-play"></i> Ver cómo ayuda</a>
+                    </div>
+                </div>
+
+                <div class="hero-panel">
+                    <div class="panel-card">
+                        <div class="panel-head">
+                            <div>
+                                <div style="font-size:0.9rem;color:var(--muted);margin-bottom:6px;">Estado general</div>
+                                <div style="font-size:1.5rem;font-weight:900;">Monitoreo activo</div>
+                            </div>
+                            <div class="status-badge"><span class="pulse-dot"></span> En operación</div>
+                        </div>
+                        <div class="meter-grid">
+                            <div class="meter">
+                                <div class="label">Apertura de tapa</div>
+                                <div class="value">Vigilada</div>
+                                <div class="hint">Se detecta si la tapa se abre sin autorización.</div>
+                            </div>
+                            <div class="meter">
+                                <div class="label">Consumo</div>
+                                <div class="value">Preciso</div>
+                                <div class="hint">Compara flujo de ida y retorno para estimar gasto real.</div>
+                            </div>
+                            <div class="meter">
+                                <div class="label">Ubicación</div>
+                                <div class="value">GPS</div>
+                                <div class="hint">Permite ubicar la unidad durante su operación.</div>
+                            </div>
+                            <div class="meter">
+                                <div class="label">Alertas</div>
+                                <div class="value">Automáticas</div>
+                                <div class="hint">Notifica cuando algo sale de lo normal.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" id="solucion">
+            <div class="wrap">
+                <div class="section-head">
+                    <div>
+                        <div class="eyebrow"><i class="fa-solid fa-rocket"></i> ¿Qué resuelve?</div>
+                        <h2>Una forma simple de cuidar el combustible</h2>
+                    </div>
+                    <p>
+                        El sistema fue diseñado para que una persona sin conocimientos técnicos pueda entender el valor de inmediato: saber dónde está la unidad, si la tapa fue abierta y si el consumo se comporta como debería.
+                    </p>
+                </div>
+
+                <div class="cards">
+                    <article class="card">
+                        <i class="fa-solid fa-triangle-exclamation"></i>
+                        <h3>Detecta aperturas sospechosas</h3>
+                        <p>Ayuda a identificar si alguien intenta manipular el tanque cuando no debería hacerlo.</p>
+                    </article>
+                    <article class="card">
+                        <i class="fa-solid fa-gauge-high"></i>
+                        <h3>Mide el gasto de forma clara</h3>
+                        <p>Compara el combustible que entra y el que regresa para mostrar un consumo más realista.</p>
+                    </article>
+                    <article class="card">
+                        <i class="fa-solid fa-location-dot"></i>
+                        <h3>Ubica la unidad</h3>
+                        <p>Incluye geolocalización para saber dónde se encuentra el vehículo en cada transmisión.</p>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" id="beneficios">
+            <div class="wrap split">
+                <div class="glass">
+                    <div class="eyebrow"><i class="fa-solid fa-star"></i> Beneficios para el cliente</div>
+                    <h2 style="font-size:clamp(1.9rem, 4vw, 2.8rem);margin-bottom:18px;">Lo que recibe el cliente desde el primer día</h2>
+                    <ul class="list">
+                        <li><i class="fa-solid fa-circle-check"></i> Sabe si la tapa del tanque fue abierta sin permiso.</li>
+                        <li><i class="fa-solid fa-circle-check"></i> Puede revisar el consumo de combustible de forma clara y sencilla.</li>
+                        <li><i class="fa-solid fa-circle-check"></i> Recibe alertas cuando algo no se comporta como debería.</li>
+                        <li><i class="fa-solid fa-circle-check"></i> Tiene más tranquilidad al saber dónde está la unidad.</li>
+                    </ul>
+                </div>
+
+                <div class="glass">
+                    <div class="eyebrow"><i class="fa-solid fa-shield-heart"></i> Por qué le conviene al usuario</div>
+                    <h2 style="font-size:clamp(1.9rem, 4vw, 2.8rem);margin-bottom:18px;">Una solución fácil de entender y usar</h2>
+                    <p style="color:var(--muted);line-height:1.8;margin-bottom:16px;">
+                        FuelGuard presenta la información en palabras simples y con indicadores visuales para que cualquier persona pueda entender qué pasa con su combustible.
+                    </p>
+                    <p style="color:var(--muted);line-height:1.8;">
+                        Eso ayuda a que el cliente tome decisiones más rápido, evite sorpresas y sienta mayor control sobre su unidad sin depender de conocimientos técnicos.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" id="como-funciona">
+            <div class="wrap">
+                <div class="section-head">
+                    <div>
+                        <div class="eyebrow"><i class="fa-solid fa-gears"></i> Cómo funciona</div>
+                        <h2>Señales simples, decisiones más rápidas</h2>
+                    </div>
+                    <p>
+                        El prototipo toma datos del tanque y los convierte en información fácil de interpretar para que el usuario no tenga que entender electrónica ni programación.
+                    </p>
+                </div>
+
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-number">1</div>
+                        <div>
+                            <h3>Captura la información</h3>
+                            <p>Lee flujo de ida, flujo de retorno, estado de la tapa y ubicación GPS de la unidad.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-number">2</div>
+                        <div>
+                            <h3>La envía a la nube</h3>
+                            <p>Los datos viajan por comunicación inalámbrica y red celular para no depender de una sola conexión.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-number">3</div>
+                        <div>
+                            <h3>Detecta situaciones anormales</h3>
+                            <p>Si la tapa se abre, si el flujo no coincide o si hay un comportamiento raro, el sistema genera una alerta.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-number">4</div>
+                        <div>
+                            <h3>Presenta resultados claros</h3>
+                            <p>La información se puede ver en paneles y resúmenes visuales para facilitar la venta y la demostración.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" id="tecnologia">
+            <div class="wrap">
+                <div class="section-head">
+                    <div>
+                        <div class="eyebrow"><i class="fa-solid fa-microchip"></i> Tecnología resumida</div>
+                        <h2>Lo importante, explicado sin complicaciones</h2>
+                    </div>
+                    <p>
+                        Esta parte resume el prototipo con un lenguaje comercial y entendible para una presentación con clientes, maestros o inversionistas.
+                    </p>
+                </div>
+
+                <div class="cards" style="grid-template-columns:repeat(4,1fr);">
+                    <article class="card">
+                        <i class="fa-solid fa-satellite-dish"></i>
+                        <h3>Ubicación GPS</h3>
+                        <p>Saber dónde está la unidad en cada momento.</p>
+                    </article>
+                    <article class="card">
+                        <i class="fa-solid fa-arrow-right-arrow-left"></i>
+                        <h3>Flujo ida y retorno</h3>
+                        <p>Ayuda a estimar el consumo real de combustible.</p>
+                    </article>
+                    <article class="card">
+                        <i class="fa-solid fa-door-open"></i>
+                        <h3>Sensor de tapa</h3>
+                        <p>Detecta aperturas que podrían indicar riesgo.</p>
+                    </article>
+                    <article class="card">
+                        <i class="fa-solid fa-cloud"></i>
+                        <h3>Información remota</h3>
+                        <p>Los datos pueden consultarse desde un panel central.</p>
+                    </article>
+                </div>
+
+                <div class="proof-strip">
+                    <div class="proof"><strong>24/7</strong> monitoreo continuo</div>
+                    <div class="proof"><strong>3-4 s</strong> latencia estimada</div>
+                    <div class="proof"><strong>±2%</strong> precisión objetivo</div>
+                    <div class="proof"><strong>4 señales</strong> clave de control</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" id="contacto">
+            <div class="wrap">
+                <div class="cta-band">
+                    <div class="eyebrow"><i class="fa-solid fa-comments"></i> Presentación comercial</div>
+                    <h2>FuelGuard está listo para demostrarse</h2>
+                    <p>
+                        Si quieres vender el prototipo, esta página ya comunica el valor principal: protege combustible, avisa problemas y muestra información fácil de entender.
+                        Después podemos agregar una sección de demo, fichas técnicas o contacto directo.
+                    </p>
+                    <div class="hero-actions" style="margin-top:22px;">
+                        <a class="btn-primary" href="mailto:contacto@fualguard.com"><i class="fa-solid fa-envelope"></i> Escribir al equipo</a>
+                        <button class="btn-secondary" type="button" id="openAccessPanelBtn"><i class="fa-solid fa-user-lock"></i> Crear cuenta / Entrar</button>
+                        <a class="btn-secondary" href="#top"><i class="fa-solid fa-arrow-up"></i> Volver arriba</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <div id="authModal" style="display:none;position:fixed;inset:0;background:rgba(5,11,20,0.78);backdrop-filter:blur(10px);z-index:2000;align-items:center;justify-content:center;padding:18px;">
+        <div style="width:min(100%, 460px);background:linear-gradient(180deg, rgba(13,23,38,0.98), rgba(7,17,31,0.98));border:1px solid rgba(255,255,255,0.1);border-radius:24px;box-shadow:var(--shadow);overflow:hidden;">
+            <div style="padding:22px 22px 10px;border-bottom:1px solid rgba(255,255,255,0.08);display:flex;justify-content:space-between;align-items:center;gap:16px;">
+                <div>
+                    <div style="font-size:0.85rem;color:var(--muted);font-weight:600;">Acceso privado</div>
+                    <div style="font-size:1.35rem;font-weight:900;letter-spacing:-0.04em;">FuelGuard</div>
+                </div>
+                <button type="button" id="closeAuthModalBtn" style="background:transparent;border:none;color:var(--muted);font-size:1.5rem;cursor:pointer;line-height:1;">&times;</button>
+            </div>
+
+            <div style="display:flex;gap:10px;padding:16px 22px 0;">
+                <button type="button" class="auth-tab active" data-auth-tab="login" style="flex:1;padding:12px 14px;border-radius:14px;border:1px solid rgba(255,255,255,0.1);background:linear-gradient(135deg,var(--brand) 0%, var(--brand-2) 100%);color:#09111d;font-weight:800;cursor:pointer;">Iniciar sesión</button>
+                <button type="button" class="auth-tab" data-auth-tab="register" style="flex:1;padding:12px 14px;border-radius:14px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.04);color:var(--text);font-weight:800;cursor:pointer;">Crear cuenta</button>
+            </div>
+
+            <div style="padding:20px 22px 22px;">
+                <form id="loginForm" style="display:grid;gap:14px;">
+                    <div>
+                        <label style="display:block;margin-bottom:8px;color:var(--text);font-weight:700;">Correo electrónico</label>
+                        <input id="loginIdentifier" type="email" placeholder="tucorreo@empresa.com" autocomplete="email" style="width:100%;padding:14px 16px;border-radius:14px;border:1px solid rgba(255,255,255,0.12);background:rgba(8,15,27,0.96);color:white;font:inherit;">
+                    </div>
+                    <div>
+                        <label style="display:block;margin-bottom:8px;color:var(--text);font-weight:700;">Contraseña</label>
+                        <input id="loginPassword" type="password" placeholder="Tu contraseña" autocomplete="current-password" style="width:100%;padding:14px 16px;border-radius:14px;border:1px solid rgba(255,255,255,0.12);background:rgba(8,15,27,0.96);color:white;font:inherit;">
+                    </div>
+                    <div id="loginMessage" style="min-height:20px;color:#ffb7b7;font-size:0.92rem;font-weight:600;"></div>
+                    <button type="submit" class="btn-primary" style="width:100%;justify-content:center;border:none;cursor:pointer;">Entrar al Dashboard</button>
+                </form>
+
+                <form id="registerForm" style="display:none;gap:14px;">
+                    <div>
+                        <label style="display:block;margin-bottom:8px;color:var(--text);font-weight:700;">Nombre completo</label>
+                        <input id="registerName" type="text" placeholder="Nombre del cliente" autocomplete="name" style="width:100%;padding:14px 16px;border-radius:14px;border:1px solid rgba(255,255,255,0.12);background:rgba(8,15,27,0.96);color:white;font:inherit;">
+                    </div>
+                    <div>
+                        <label style="display:block;margin-bottom:8px;color:var(--text);font-weight:700;">Correo electrónico</label>
+                        <input id="registerIdentifier" type="email" placeholder="cliente@empresa.com" autocomplete="email" style="width:100%;padding:14px 16px;border-radius:14px;border:1px solid rgba(255,255,255,0.12);background:rgba(8,15,27,0.96);color:white;font:inherit;">
+                    </div>
+                    <div>
+                        <label style="display:block;margin-bottom:8px;color:var(--text);font-weight:700;">Contraseña</label>
+                        <input id="registerPassword" type="password" placeholder="Mínimo 8 caracteres" autocomplete="new-password" style="width:100%;padding:14px 16px;border-radius:14px;border:1px solid rgba(255,255,255,0.12);background:rgba(8,15,27,0.96);color:white;font:inherit;">
+                    </div>
+                    <div>
+                        <label style="display:block;margin-bottom:8px;color:var(--text);font-weight:700;">Confirmar contraseña</label>
+                        <input id="registerPasswordConfirm" type="password" placeholder="Repite la contraseña" autocomplete="new-password" style="width:100%;padding:14px 16px;border-radius:14px;border:1px solid rgba(255,255,255,0.12);background:rgba(8,15,27,0.96);color:white;font:inherit;">
+                    </div>
+                    <div id="registerMessage" style="min-height:20px;color:#b8ffd9;font-size:0.92rem;font-weight:600;"></div>
+                    <button type="submit" class="btn-primary" style="width:100%;justify-content:center;border:none;cursor:pointer;">Crear cuenta</button>
+                    <div style="color:var(--muted);font-size:0.85rem;line-height:1.5;">Usa un correo válido y una contraseña de al menos 8 caracteres.</div>
+                </form>
+
+                <div style="margin-top:16px;padding:14px 16px;border-radius:14px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);color:var(--muted);font-size:0.9rem;line-height:1.6;">
+                    El acceso se guarda en este navegador para la demostración del prototipo.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="wrap footer-inner">
+            <div><strong style="color:white;">FuelGuard</strong> | Protección inteligente de combustible</div>
+            <div>Proyecto integrador · Versión informativa del prototipo</div>
+        </div>
+    </footer>
+
+    <script>
+        const authModal = document.getElementById('authModal');
+        const openAccessPanelBtn = document.getElementById('openAccessPanelBtn');
+        const authOpenBtn = document.getElementById('authOpenBtn');
+        const closeAuthModalBtn = document.getElementById('closeAuthModalBtn');
+        const authTabs = document.querySelectorAll('.auth-tab');
+        const loginForm = document.getElementById('loginForm');
+        const registerForm = document.getElementById('registerForm');
+        const loginMessage = document.getElementById('loginMessage');
+        const registerMessage = document.getElementById('registerMessage');
+
+        function openAuthModal(defaultTab = 'login') {
+            authModal.style.display = 'flex';
+            setAuthTab(defaultTab);
+        }
+
+        function closeAuthModal() {
+            authModal.style.display = 'none';
+            loginMessage.textContent = '';
+            registerMessage.textContent = '';
+        }
+
+        function setAuthTab(tabName) {
+            authTabs.forEach(button => {
+                const active = button.dataset.authTab === tabName;
+                button.classList.toggle('active', active);
+                button.style.background = active ? 'linear-gradient(135deg, var(--brand) 0%, var(--brand-2) 100%)' : 'rgba(255,255,255,0.04)';
+                button.style.color = active ? '#09111d' : 'var(--text)';
+            });
+            loginForm.style.display = tabName === 'login' ? 'grid' : 'none';
+            registerForm.style.display = tabName === 'register' ? 'grid' : 'none';
+        }
+
+        function getStoredUsers() {
+            try {
+                return JSON.parse(localStorage.getItem('fuelguard_users') || '[]');
+            } catch (error) {
+                return [];
+            }
+        }
+
+        function saveStoredUsers(users) {
+            localStorage.setItem('fuelguard_users', JSON.stringify(users));
+        }
+
+        function setSession(user) {
+            localStorage.setItem('fuelguard_session', JSON.stringify(user));
+        }
+
+        function isValidEmail(email) {
+            return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+        }
+
+        function isStrongPassword(password) {
+            return typeof password === 'string' && password.length >= 8;
+        }
+
+        function clearMessages() {
+            loginMessage.textContent = '';
+            registerMessage.textContent = '';
+        }
+
+        authOpenBtn.addEventListener('click', (event) => {
+            event.preventDefault();
+            openAuthModal('login');
+        });
+
+        openAccessPanelBtn.addEventListener('click', () => openAuthModal('login'));
+        closeAuthModalBtn.addEventListener('click', closeAuthModal);
+
+        authModal.addEventListener('click', (event) => {
+            if (event.target === authModal) {
+                closeAuthModal();
+            }
+        });
+
+        authTabs.forEach(button => {
+            button.addEventListener('click', () => {
+                clearMessages();
+                setAuthTab(button.dataset.authTab);
+            });
+        });
+
+        loginForm.addEventListener('submit', (event) => {
+            event.preventDefault();
+            const identifier = document.getElementById('loginIdentifier').value.trim().toLowerCase();
+            const password = document.getElementById('loginPassword').value;
+
+            if (!isValidEmail(identifier)) {
+                loginMessage.textContent = 'Ingresa un correo electrónico válido.';
+                return;
+            }
+
+            if (!password) {
+                loginMessage.textContent = 'Escribe tu contraseña para continuar.';
+                return;
+            }
+
+            const users = getStoredUsers();
+            const user = users.find(item => (item.identifier || '').toLowerCase() === identifier && item.password === password);
+
+            if (!user) {
+                loginMessage.textContent = 'Usuario o contraseña incorrectos.';
+                return;
+            }
+
+            setSession({ name: user.name, identifier: user.identifier });
+            window.location.href = 'Dashboard.html';
+        });
+
+        registerForm.addEventListener('submit', (event) => {
+            event.preventDefault();
+            const name = document.getElementById('registerName').value.trim();
+            const identifier = document.getElementById('registerIdentifier').value.trim().toLowerCase();
+            const password = document.getElementById('registerPassword').value;
+            const passwordConfirm = document.getElementById('registerPasswordConfirm').value;
+
+            if (name.length < 3) {
+                registerMessage.textContent = 'El nombre debe tener al menos 3 caracteres.';
+                return;
+            }
+
+            if (!isValidEmail(identifier)) {
+                registerMessage.textContent = 'Ingresa un correo electrónico válido.';
+                return;
+            }
+
+            if (!isStrongPassword(password)) {
+                registerMessage.textContent = 'La contraseña debe tener al menos 8 caracteres.';
+                return;
+            }
+
+            if (password !== passwordConfirm) {
+                registerMessage.textContent = 'Las contraseñas no coinciden.';
+                return;
+            }
+
+            if (!name || !identifier || !password || !passwordConfirm) {
+                registerMessage.textContent = 'Completa todos los campos para crear la cuenta.';
+                return;
+            }
+
+            const users = getStoredUsers();
+            const exists = users.some(item => (item.identifier || '').toLowerCase() === identifier);
+
+            if (exists) {
+                registerMessage.textContent = 'Ya existe una cuenta con ese usuario o correo.';
+                return;
+            }
+
+            users.push({ name, identifier, password });
+            saveStoredUsers(users);
+            setSession({ name, identifier });
+            registerMessage.textContent = 'Cuenta creada. Redirigiendo al Dashboard...';
+
+            setTimeout(() => {
+                window.location.href = 'Dashboard.html';
+            }, 900);
+        });
+
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape') {
+                closeAuthModal();
+            }
+        });
+    </script>
+</body>
+</html>

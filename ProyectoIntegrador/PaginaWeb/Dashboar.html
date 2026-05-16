@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FuelGuard | Centro de Control</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #07111f;
+            --surface: rgba(255, 255, 255, 0.08);
+            --surface-2: rgba(255, 255, 255, 0.12);
+            --text: #f5f7fb;
+            --muted: #a7b3c7;
+            --line: rgba(255, 255, 255, 0.12);
+            --brand: #ff7a18;
+            --brand-2: #ffb21e;
+            --success: #31c48d;
+            --danger: #ff5d5d;
+            --shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+            background:
+                radial-gradient(circle at top left, rgba(255, 122, 24, 0.16), transparent 28%),
+                radial-gradient(circle at top right, rgba(49, 196, 141, 0.14), transparent 26%),
+                linear-gradient(180deg, #050b14 0%, var(--bg) 35%, #08111d 100%);
+            min-height: 100vh;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            background-image:
+                linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+            background-size: 56px 56px;
+            mask-image: linear-gradient(180deg, rgba(0,0,0,0.24), transparent 95%);
+        }
+
+        .header {
+            text-align: center;
+            padding: 28px 20px;
+            border-bottom: 1px solid var(--line);
+            background: rgba(5, 11, 20, 0.72);
+            backdrop-filter: blur(18px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.18);
+            position: sticky;
+            top: 0;
+            z-index: 30;
+        }
+
+        h1 {
+            margin: 0;
+            color: white;
+            letter-spacing: -0.05em;
+            font-size: clamp(1.8rem, 3vw, 2.5rem);
+            font-weight: 900;
+        }
+
+        .header h1::before {
+            content: '⛽';
+            margin-right: 10px;
+            filter: drop-shadow(0 10px 20px rgba(255, 122, 24, 0.35));
+        }
+
+        .subtitle {
+            color: var(--muted);
+            font-size: 0.95rem;
+            margin-top: 8px;
+            font-weight: 500;
+        }
+
+        .nav-menu {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            padding: 14px 16px;
+            background: rgba(13, 23, 38, 0.82);
+            border-bottom: 1px solid var(--line);
+            backdrop-filter: blur(16px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
+            position: sticky;
+            top: 92px;
+            z-index: 25;
+        }
+
+        .tab-btn {
+            background: rgba(255, 255, 255, 0.04);
+            color: var(--muted);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 12px 22px;
+            font-size: 0.98rem;
+            font-weight: 800;
+            cursor: pointer;
+            border-radius: 999px;
+            transition: all 0.25s ease;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+        }
+
+        .tab-btn:hover {
+            color: white;
+            background: rgba(255, 255, 255, 0.08);
+            transform: translateY(-1px);
+        }
+
+        .tab-btn.active {
+            color: #09111d;
+            background: linear-gradient(135deg, var(--brand) 0%, var(--brand-2) 100%);
+            border-color: transparent;
+            box-shadow: 0 14px 28px rgba(255, 122, 24, 0.28);
+        }
+
+        .tab-content {
+            display: none;
+            padding: 24px 0 32px;
+            max-width: 1440px;
+            margin: 0 auto;
+            width: min(100% - 24px, 1440px);
+        }
+
+        .active-content {
+            display: block;
+        }
+
+        .time-controls {
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.05));
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 18px;
+            border-radius: 22px;
+            margin-bottom: 22px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow);
+        }
+
+        .time-controls label {
+            font-weight: 700;
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(255, 255, 255, 0.04);
+            padding: 10px 12px;
+            border-radius: 14px;
+            border: 1px solid rgba(255, 255, 255, 0.07);
+        }
+
+        input[type="datetime-local"] {
+            background: rgba(8, 15, 27, 0.95);
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            padding: 10px 12px;
+            border-radius: 12px;
+            color-scheme: dark;
+            font: inherit;
+        }
+
+        button.btn-action {
+            background: linear-gradient(135deg, var(--success) 0%, #19a873 100%);
+            color: #08111d;
+            border: none;
+            padding: 11px 20px;
+            font-weight: 800;
+            border-radius: 999px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            box-shadow: 0 12px 24px rgba(49, 196, 141, 0.22);
+        }
+
+        button.btn-action:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 16px 30px rgba(49, 196, 141, 0.28);
+        }
+
+        button.btn-reset {
+            background: linear-gradient(135deg, #ff6b6b 0%, #e74c3c 100%);
+            color: white;
+            box-shadow: 0 12px 24px rgba(231, 76, 60, 0.18);
+        }
+
+        button.btn-reset:hover {
+            box-shadow: 0 16px 30px rgba(231, 76, 60, 0.24);
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(440px, 1fr));
+            gap: 20px;
+        }
+
+        .panel {
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.05));
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 18px;
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(10px);
+        }
+
+        .panel h2 {
+            font-size: 0.98rem;
+            margin: 0 0 14px;
+            color: #eaf0f8;
+            text-align: center;
+            letter-spacing: 0.01em;
+        }
+
+        iframe {
+            width: 100%;
+            height: 250px;
+            border: none;
+            border-radius: 18px;
+            background: #0b1320;
+        }
+
+        .nodered-iframe {
+            height: 750px;
+        }
+
+        @media (max-width: 900px) {
+            .nav-menu {
+                top: 88px;
+            }
+
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .panel {
+                padding: 14px;
+                border-radius: 18px;
+            }
+
+            .time-controls {
+                justify-content: stretch;
+            }
+
+            .time-controls label,
+            input[type="datetime-local"],
+            button.btn-action {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 560px) {
+            .header {
+                padding: 22px 14px;
+            }
+
+            .nav-menu {
+                padding: 12px 10px;
+            }
+
+            .tab-btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            iframe {
+                height: 220px;
+            }
+
+            .nodered-iframe {
+                height: 640px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>FuelGuard</h1>
+        <div class="subtitle">Centro de Monitoreo y Análisis Logístico</div>
+    </div>
+
+    <div class="nav-menu">
+        <button class="tab-btn active" onclick="openTab(event, 'Dashboard')">🖥️ Dashboard en Vivo</button>
+        <button class="tab-btn" onclick="openTab(event, 'Historial')">📈 Historial de Análisis</button>
+        <button class="tab-btn" id="logoutBtn" type="button">🚪 Cerrar sesión</button>
+    </div>
+
+    <div id="Dashboard" class="tab-content active-content">
+        <div class="panel">
+            <h2>Panel de Control y Alertas en Tiempo Real</h2>
+            <iframe class="nodered-iframe" src="http://34.145.56.208:1880/dashboard/page2" title="Node-RED Dashboard"></iframe>
+        </div>
+    </div>
+
+    <div id="Historial" class="tab-content">
+        <div class="time-controls">
+            <label>Desde: <input type="datetime-local" id="timeFrom"></label>
+            <label>Hasta: <input type="datetime-local" id="timeTo"></label>
+            <button class="btn-action" onclick="updateGrafanaTime()">Aplicar Filtro Personalizado</button>
+            <button class="btn-action btn-reset" onclick="resetGrafanaTime()">Volver a Tiempo Real (3h)</button>
+        </div>
+
+        <div class="dashboard-grid">
+            <div class="panel">
+                <h2>📍 Mapa Histórico GPS</h2>
+                <iframe class="grafana-panel" src="http://34.145.56.208:3000/d-solo/adghngx/monitoreo?orgId=1&from=now-3h&to=now&theme=dark&panelId=1"></iframe>
+            </div>
+            <div class="panel">
+                <h2>⛽ Consumo Acumulado</h2>
+                <iframe class="grafana-panel" src="http://34.145.56.208:3000/d-solo/adghngx/monitoreo?orgId=1&from=now-3h&to=now&theme=dark&panelId=2"></iframe>
+            </div>
+            <div class="panel">
+                <h2>📊 Flujo Histórico (Ida vs Retorno)</h2>
+                <iframe class="grafana-panel" src="http://34.145.56.208:3000/d-solo/adghngx/monitoreo?orgId=1&from=now-3h&to=now&theme=dark&panelId=4"></iframe>
+            </div>
+            <div class="panel">
+                <h2>🧲 Historial Estado de la Tapa</h2>
+                <iframe class="grafana-panel" src="http://34.145.56.208:3000/d-solo/adghngx/monitoreo?orgId=1&from=now-3h&to=now&theme=dark&panelId=3"></iframe>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const session = localStorage.getItem('fuelguard_session');
+
+        if (!session) {
+            window.location.replace('app.html');
+        }
+
+        function openTab(evt, tabName) {
+            var i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("tab-content");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].classList.remove("active-content");
+            }
+            tablinks = document.getElementsByClassName("tab-btn");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].classList.remove("active");
+            }
+            document.getElementById(tabName).classList.add("active-content");
+            evt.currentTarget.classList.add("active");
+        }
+
+        function updateGrafanaTime() {
+            const fromDate = document.getElementById('timeFrom').value;
+            const toDate = document.getElementById('timeTo').value;
+
+            if (!fromDate || !toDate) {
+                alert("Por favor selecciona la fecha/hora de inicio y de fin.");
+                return;
+            }
+
+            const fromMs = new Date(fromDate).getTime();
+            const toMs = new Date(toDate).getTime();
+
+            if (fromMs >= toMs) {
+                alert("La fecha 'Desde' debe ser anterior a la fecha 'Hasta'.");
+                return;
+            }
+
+            const iframes = document.querySelectorAll('.grafana-panel');
+            iframes.forEach(iframe => {
+                let url = new URL(iframe.src);
+                url.searchParams.set('from', fromMs);
+                url.searchParams.set('to', toMs);
+                url.searchParams.delete('refresh');
+                iframe.src = url.toString();
+            });
+        }
+
+        function resetGrafanaTime() {
+            document.getElementById('timeFrom').value = "";
+            document.getElementById('timeTo').value = "";
+
+            const iframes = document.querySelectorAll('.grafana-panel');
+            iframes.forEach(iframe => {
+                let url = new URL(iframe.src);
+                url.searchParams.set('from', 'now-3h');
+                url.searchParams.set('to', 'now');
+                url.searchParams.set('refresh', '5s');
+                iframe.src = url.toString();
+            });
+        }
+
+        function closeSession() {
+            localStorage.removeItem('fuelguard_session');
+            window.location.replace('app.html');
+        }
+
+        document.getElementById('logoutBtn').addEventListener('click', closeSession);
+    </script>
+</body>
+</html>
