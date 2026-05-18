@@ -1,4 +1,6 @@
 #define TINY_GSM_MODEM_SIM7070
+#define TINY_GSM_RX_BUFFER 1024 // IMPORTANTE: Previene cuelgues por respuestas largas del módem
+
 #include <TinyGsmClient.h>
 #include <PubSubClient.h>
 #include <esp_now.h>
@@ -12,7 +14,7 @@
 #define LED_PIN       12
 
 // ===================== RED =====================
-const char apn[]      = "web.iusacellgsm.mx"; 
+const char apn[]      = "web.iusacellgsm.mx";
 const char gprsUser[] = "iusacellgsm";
 const char gprsPass[] = "iusacellgsm";
 
@@ -28,8 +30,6 @@ PubSubClient mqtt(client);
 // ===================== VARIABLES =====================
 String payloadESPNow = "";
 volatile bool hayDatoNuevo = false;
-
-float lat = 0, lon = 0;
 
 // ===== BUFFER (almacena datos si no hay internet) =====
 #define MAX_BUFFER 10
@@ -53,7 +53,9 @@ void setup() {
   pinMode(LED_PIN, OUTPUT);
   pinMode(MODEM_PWRKEY, OUTPUT);
 
+  // Asegurar que la WiFi no intente hacer reconexiones raras que afecten ESP-NOW
   WiFi.mode(WIFI_STA);
+  WiFi.disconnect();
   Serial.print("MAC LilyGO: ");
   Serial.println(WiFi.macAddress());
 
@@ -68,42 +70,40 @@ void setup() {
   Serial.println("Iniciando módem...");
 
   if (!modem.testAT()) {
-    Serial.println("[ERROR] Módem no responde");
+    Serial.println("[ERROR] Módem no responde. Revisa la batería y pines.");
   }
 
-  modem.sendAT("+CGPS=1");
-  modem.waitResponse();
+  // ELIMINADO: Todo el código de activación del GPS interno del SIM7070
 
-  modem.gprsConnect(apn, gprsUser, gprsPass);
-
-  // ESP-NOW
+  // ESP-NOW Init
   if (esp_now_init() != ESP_OK) {
     Serial.println("Error ESP-NOW");
   }
   esp_now_register_recv_cb(onDataRecv);
 
   mqtt.setServer(broker, 1883);
+  mqtt.setKeepAlive(60); // Mantener la conexión MQTT viva por más tiempo
 }
 
 // ===================== FUNCIONES =====================
 
-// 🔄 Reconectar red + internet
+// 🔄 Reconectar red + internet (No bloqueante en caso de caída)
 void asegurarConexion() {
   if (!modem.isNetworkConnected()) {
-    Serial.println("[RED] Sin señal...");
-    if (!modem.waitForNetwork(10000)) {
-      Serial.println("[RED] No disponible");
+    Serial.println("[RED] Esperando señal celular...");
+    if (!modem.waitForNetwork(60000)) {
+      Serial.println("[RED] No disponible por ahora");
       return;
     }
   }
 
-  if (!modem.isGprsConnected()) {
-    Serial.println("[GPRS] Reconectando...");
+  if (modem.isNetworkConnected() && !modem.isGprsConnected()) {
+    Serial.println("[GPRS] Conectando a datos...");
     if (!modem.gprsConnect(apn, gprsUser, gprsPass)) {
-      Serial.println("[GPRS] Fallo");
+      Serial.println("[GPRS] Fallo de conexión de datos");
       return;
     } else {
-      Serial.println("[GPRS] OK");
+      Serial.println("[GPRS] CONECTADO OK");
     }
   }
 }
@@ -112,25 +112,30 @@ void asegurarConexion() {
 void asegurarMQTT() {
   if (!mqtt.connected()) {
     Serial.print("[MQTT] Reconectando...");
-    if (mqtt.connect("GatewayIsaiITSOEH")) {
+    String clientId = "GatewayFuelGuard-" + String(random(0xffff), HEX);
+    if (mqtt.connect(clientId.c_str())) {
       Serial.println("OK");
     } else {
-      Serial.println("Fallo");
+      Serial.print("Fallo, rc=");
+      Serial.println(mqtt.state());
     }
   }
 }
 
 // 📤 Enviar dato o guardar en buffer
 void enviarODefinirBuffer(String data) {
-  if (mqtt.publish(topicPublish, data.c_str())) {
-    Serial.println("[MQTT OK] Enviado:");
-    Serial.println(data);
+  if (mqtt.connected() && mqtt.publish(topicPublish, data.c_str())) {
+    Serial.println("[MQTT OK] Paquete enviado.");
   } else {
-    Serial.println("[BUFFER] Guardando dato (sin conexion MQTT)...");
+    Serial.println("[BUFFER] Sin conexión MQTT. Guardando dato localmente...");
     if (bufferIndex < MAX_BUFFER) {
       bufferDatos[bufferIndex++] = data;
     } else {
-      Serial.println("[BUFFER LLENO] Se pierde el dato mas antiguo");
+      Serial.println("[BUFFER LLENO] Se pierde el dato más antiguo.");
+      for (int i = 1; i < MAX_BUFFER; i++) {
+        bufferDatos[i - 1] = bufferDatos[i];
+      }
+      bufferDatos[MAX_BUFFER - 1] = data;
     }
   }
 }
@@ -139,15 +144,15 @@ void enviarODefinirBuffer(String data) {
 void enviarBufferPendiente() {
   if (bufferIndex == 0) return;
 
-  Serial.println("[REINTENTO] Enviando buffer...");
+  Serial.println("[REINTENTO] Enviando buffer pendiente...");
   int enviadosConExito = 0;
 
   for (int i = 0; i < bufferIndex; i++) {
     if (mqtt.publish(topicPublish, bufferDatos[i].c_str())) {
-      Serial.println("[REENVIADO OK]");
+      Serial.println("[REENVIADO OK] Paquete recuperado.");
       enviadosConExito++;
     } else {
-      Serial.println("[ERROR REENVIO] MQTT no disponible aun.");
+      Serial.println("[ERROR REENVIO] Se perdió la conexión MQTT durante el reenvío.");
       break; 
     }
   }
@@ -163,48 +168,47 @@ void enviarBufferPendiente() {
 
 // ===================== LOOP =====================
 void loop() {
+  // 1. Verificar el enlace GPRS
   asegurarConexion();
-  asegurarMQTT();
-  mqtt.loop();
 
-  enviarBufferPendiente();
+  // 2. SOLO si hay internet, operamos con MQTT
+  if (modem.isGprsConnected()) {
+    asegurarMQTT();
+    if (mqtt.connected()) {
+      mqtt.loop();
+      enviarBufferPendiente();
+    }
+  }
 
+  // 3. Procesamiento de la red sensora
   if (hayDatoNuevo) {
     digitalWrite(LED_PIN, HIGH);
 
-    // Obtener GPS del módem de la LilyGO
-    if (modem.getGPS(&lat, &lon)) {
-      Serial.printf("[GPS SIM] %.6f, %.6f\n", lat, lon);
-    }
-
-    StaticJsonDocument<384> doc; 
-    DeserializationError error = deserializeJson(doc, payloadESPNow);
+    StaticJsonDocument<384> docRecibido;
+    DeserializationError error = deserializeJson(docRecibido, payloadESPNow);
     
     if (!error) {
-      // 1. Extraer variables INSTANTÁNEAS para evaluar el peligro
-      int f1 = doc["flujo1"];
-      int f2 = doc["flujo2"];
-      int reed = doc["reed"]; // 0 = ABIERTA, 1 = CERRADA
+      // Extraemos los datos enviados por la Heltec Transmisora
+      int f1 = docRecibido["flujo1"];
+      int f2 = docRecibido["flujo2"];
+      int reed = docRecibido["reed"];
+      float latitud_heltec = docRecibido["lat"];
+      float longitud_heltec = docRecibido["lng"];
 
-      // -------------------------------------------------------------
-      // 🚀 NUEVO: ACUMULADORES SILENCIOSOS
-      // -------------------------------------------------------------
       static unsigned long acumuladoF1 = 0;
       static unsigned long acumuladoF2 = 0;
       
-      // Sumamos el consumo a nuestra "alcancía"
       acumuladoF1 += f1;
       acumuladoF2 += f2;
 
-      // 2. Aplicar la Matriz de Estados Inteligente (con los datos instantáneos)
       String diagnostico = "OPERACION_NORMAL";
       bool esAlertaCritica = false;
 
       if (f1 > 0 && f2 == 0) {
         diagnostico = "ALERTA_ORDEÑA_RETORNO";
         esAlertaCritica = true;
-      } 
-      else if (reed == 0) { 
+      }
+      else if (reed == 0) {
         if (f1 > 0) {
           diagnostico = "ALERTA_SABOTAJE_TAPA_EN_MOVIMIENTO";
           esAlertaCritica = true;
@@ -212,47 +216,39 @@ void loop() {
           diagnostico = "ALERTA_APERTURA_SOSPECHOSA";
           esAlertaCritica = true;
         }
-      } 
+      }
       else if (f1 == 0 && f2 == 0) {
         diagnostico = "APAGADO_SEGURO";
       }
 
-      // -------------------------------------------------------------
-      // ⏱️ NUEVO: TEMPORIZADOR DINÁMICO (Ahorro de datos y GPS)
-      // -------------------------------------------------------------
       static String ultimoEstadoEnviado = "";
       static unsigned long ultimoEnvioMQTT = 0;
       unsigned long tiempoActual = millis();
       
-      // Definimos cada cuánto tiempo transmitiremos según el estado del camión
-      unsigned long intervaloTransmision = 300000; // Por defecto: 5 minutos (300,000 ms)
+      unsigned long intervaloTransmision = 300000;
 
       if (diagnostico == "OPERACION_NORMAL") {
-        intervaloTransmision = 60000;  // Camión en movimiento: Transmite cada 1 minuto (para trazar el mapa GPS)
+        intervaloTransmision = 60000;  
       } else if (esAlertaCritica) {
-        intervaloTransmision = 3000;   // Alerta Crítica: Transmite en vivo cada 3 segundos
+        intervaloTransmision = 3000;  
       }
 
-      // 3. Evaluar si es momento de transmitir el paquete acumulado
       if (esAlertaCritica || (diagnostico != ultimoEstadoEnviado) || (tiempoActual - ultimoEnvioMQTT >= intervaloTransmision) || ultimoEnvioMQTT == 0) {
         
-        // ¡Magia! Sobreescribimos el JSON con los totales acumulados antes de enviarlo
-        doc["flujo1"] = acumuladoF1;
-        doc["flujo2"] = acumuladoF2;
-
-        // Inyectamos las coordenadas del Gateway celular y el estado
-        doc["lat_sim"] = lat;
-        doc["lon_sim"] = lon;
-        doc["gateway"] = "Tanque-01"; 
-        doc["status"] = diagnostico; 
+        // Creamos el JSON que se irá a HiveMQ (Node-RED)
+        StaticJsonDocument<384> docEnvio;
+        docEnvio["flujo1"] = acumuladoF1;
+        docEnvio["flujo2"] = acumuladoF2;
+        docEnvio["lat"] = latitud_heltec;    // Usamos el GPS del Heltec
+        docEnvio["lng"] = longitud_heltec;   // Usamos el GPS del Heltec
+        docEnvio["gateway"] = "Tanque-01";
+        docEnvio["status"] = diagnostico;
 
         char bufferFinal[384];
-        serializeJson(doc, bufferFinal);
+        serializeJson(docEnvio, bufferFinal);
 
-        // Enviamos el paquete gigante a Node-RED e InfluxDB
         enviarODefinirBuffer(String(bufferFinal));
 
-        // Reiniciamos los temporizadores y nuestra "alcancía"
         ultimoEstadoEnviado = diagnostico;
         ultimoEnvioMQTT = tiempoActual;
         
@@ -260,12 +256,11 @@ void loop() {
         acumuladoF2 = 0;
 
       } else {
-        // En lugar de imprimir cada 3 segundos, lo mostramos ocasionalmente para no saturar el monitor
-        Serial.print("."); 
+        Serial.print(".");
       }
 
     } else {
-      Serial.println("[ERROR JSON] Formato invalido recibido por ESP-NOW");
+      Serial.println("[ERROR JSON] Formato inválido recibido por ESP-NOW");
     }
 
     digitalWrite(LED_PIN, LOW);
