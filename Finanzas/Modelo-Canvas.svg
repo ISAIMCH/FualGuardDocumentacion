@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
+  <!-- Fondo blanco -->
+  <rect width="1200" height="800" fill="white" stroke="black" stroke-width="2"/>
+  
+  <!-- Título -->
+  <text x="600" y="30" font-size="28" font-weight="bold" text-anchor="middle" fill="black">
+    Business Model Canvas - FuelGuard
+  </text>
+  
+  <!-- Sección 1: Socios Clave (Arriba Izquierda) -->
+  <rect x="10" y="50" width="180" height="180" fill="#E3F2FD" stroke="black" stroke-width="1"/>
+  <text x="100" y="75" font-size="14" font-weight="bold" text-anchor="middle" fill="black">Socios Clave</text>
+  <text x="15" y="100" font-size="11" fill="black">• Fabricantes sensores</text>
+  <text x="15" y="120" font-size="11" fill="black">• Operador celular (Iusacell)</text>
+  <text x="15" y="140" font-size="11" fill="black">• HiveMQ (MQTT)</text>
+  <text x="15" y="160" font-size="11" fill="black">• Distribuidores tecnología</text>
+  <text x="15" y="180" font-size="11" fill="black">• Empresas transportes</text>
+  <text x="15" y="200" font-size="11" fill="black">• Integrador sistemas</text>
+  
+  <!-- Sección 2: Actividades Clave (Arriba Centro-Izquierda) -->
+  <rect x="200" y="50" width="180" height="180" fill="#F3E5F5" stroke="black" stroke-width="1"/>
+  <text x="290" y="75" font-size="14" font-weight="bold" text-anchor="middle" fill="black">Actividades Clave</text>
+  <text x="205" y="100" font-size="11" fill="black">• Desarrollo firmware</text>
+  <text x="205" y="120" font-size="11" fill="black">• Integración sensores</text>
+  <text x="205" y="140" font-size="11" fill="black">• Dashboard web</text>
+  <text x="205" y="160" font-size="11" fill="black">• Soporte técnico</text>
+  <text x="205" y="180" font-size="11" fill="black">• Instalación en campo</text>
+  <text x="205" y="200" font-size="11" fill="black">• Capacitación usuario</text>
+  
+  <!-- Sección 3: Recursos Clave (Centro Panel Izquierdo) -->
+  <rect x="100" y="240" width="180" height="150" fill="#FFF3E0" stroke="black" stroke-width="1"/>
+  <text x="190" y="265" font-size="14" font-weight="bold" text-anchor="middle" fill="black">Recursos Clave</text>
+  <text x="105" y="290" font-size="11" fill="black">• Equipo técnico IoT</text>
+  <text x="105" y="310" font-size="11" fill="black">• Plataforma MQTT</text>
+  <text x="105" y="330" font-size="11" fill="black">• Infraestructura nube</text>
+  <text x="105" y="350" font-size="11" fill="black">• Base de datos</text>
+  <text x="105" y="370" font-size="11" fill="black">• API integraciones</text>
+  
+  <!-- Sección 4: Propuesta de Valor (Centro) -->
+  <rect x="390" y="50" width="420" height="180" fill="#C8E6C9" stroke="black" stroke-width="2"/>
+  <text x="600" y="75" font-size="16" font-weight="bold" text-anchor="middle" fill="black">Propuesta de Valor</text>
+  <text x="395" y="105" font-size="12" fill="black">✓ Monitoreo en tiempo real cada 5 segundos</text>
+  <text x="395" y="130" font-size="12" fill="black">✓ Detección de robo en &lt;2 segundos</text>
+  <text x="395" y="155" font-size="12" fill="black">✓ Costo 4x menor que competencia</text>
+  <text x="395" y="180" font-size="12" fill="black">✓ Redundancia comunicación (LoRa + 4G + MQTT)</text>
+  <text x="395" y="205" font-size="12" fill="black">✓ ROI en 21 meses | ✓ Escalable sin límite</text>
+  
+  <!-- Sección 5: Relaciones Clientes (Arriba Derecha) -->
+  <rect x="1010" y="50" width="180" height="180" fill="#FFEBEE" stroke="black" stroke-width="1"/>
+  <text x="1100" y="75" font-size="14" font-weight="bold" text-anchor="middle" fill="black">Relaciones Clientes</text>
+  <text x="1015" y="100" font-size="11" fill="black">• Soporte técnico 24/7</text>
+  <text x="1015" y="120" font-size="11" fill="black">• Capacitación inicial</text>
+  <text x="1015" y="140" font-size="11" fill="black">• Dashboard personalizado</text>
+  <text x="1015" y="160" font-size="11" fill="black">• Reportes automáticos</text>
+  <text x="1015" y="180" font-size="11" fill="black">• Comunidad usuarios</text>
+  <text x="1015" y="200" font-size="11" fill="black">• Actualizaciones OTA</text>
+  
+  <!-- Sección 6: Segmentos Cliente (Centro Derecha) -->
+  <rect x="820" y="50" width="180" height="180" fill="#FCE4EC" stroke="black" stroke-width="1"/>
+  <text x="910" y="75" font-size="14" font-weight="bold" text-anchor="middle" fill="black">Segmentos Clientes</text>
+  <text x="825" y="100" font-size="11" fill="black">• Flotas de transporte</text>
+  <text x="825" y="120" font-size="11" fill="black">• Estaciones de servicio</text>
+  <text x="825" y="140" font-size="11" fill="black">• Depósitos combustible</text>
+  <text x="825" y="160" font-size="11" fill="black">• Logística y distribución</text>
+  <text x="825" y="180" font-size="11" fill="black">• Industria agrícola</text>
+  <text x="825" y="200" font-size="11" fill="black">• Minería</text>
+  
+  <!-- Sección 7: Canales (Centro Derecha Inferior) -->
+  <rect x="820" y="240" width="180" height="150" fill="#F1F8E9" stroke="black" stroke-width="1"/>
+  <text x="910" y="265" font-size="14" font-weight="bold" text-anchor="middle" fill="black">Canales</text>
+  <text x="825" y="290" font-size="11" fill="black">• Venta directa B2B</text>
+  <text x="825" y="310" font-size="11" fill="black">• Distribuidores</text>
+  <text x="825" y="330" font-size="11" fill="black">• Sitio web/e-commerce</text>
+  <text x="825" y="350" font-size="11" fill="black">• Ferias tecnológicas</text>
+  <text x="825" y="370" font-size="11" fill="black">• Alianzas estratégicas</text>
+  
+  <!-- Sección 8: Ingresos (Centro Inferior) -->
+  <rect x="390" y="240" width="420" height="150" fill="#FFFDE7" stroke="black" stroke-width="1"/>
+  <text x="600" y="265" font-size="14" font-weight="bold" text-anchor="middle" fill="black">Flujos de Ingreso</text>
+  <text x="395" y="290" font-size="11" fill="black">• Venta de hardware: \$1,060 por unidad</text>
+  <text x="395" y="310" font-size="11" fill="black">• Suscripción software: \$15-30/mes por unidad</text>
+  <text x="395" y="330" font-size="11" fill="black">• Servicios profesionales: Instalación, capacitación</text>
+  <text x="395" y="350" font-size="11" fill="black">• Mantenimiento y soporte: \$100-200/año por unidad</text>
+  <text x="395" y="370" font-size="11" fill="black">• Licencias personalizadas para integradores</text>
+  
+  <!-- Sección 9: Costos (Abajo Izquierda) -->
+  <rect x="100" y="400" width="180" height="150" fill="#E0F2F1" stroke="black" stroke-width="1"/>
+  <text x="190" y="425" font-size="14" font-weight="bold" text-anchor="middle" fill="black">Estructura Costos</text>
+  <text x="105" y="450" font-size="11" fill="black">• Componentes: \$265/unidad</text>
+  <text x="105" y="470" font-size="11" fill="black">• Desarrollo: \$2,800 (amortizado)</text>
+  <text x="105" y="490" font-size="11" fill="black">• Infraestructura cloud</text>
+  <text x="105" y="510" font-size="11" fill="black">• Conectividad: \$10/mes</text>
+  <text x="105" y="530" font-size="11" fill="black">• Soporte y mantenimiento</text>
+  
+  <!-- Leyenda de métricas clave -->
+  <rect x="10" y="570" width="1180" height="220" fill="#F5F5F5" stroke="black" stroke-width="1"/>
+  <text x="20" y="595" font-size="14" font-weight="bold" fill="black">Métricas Clave y KPIs</text>
+  
+  <text x="20" y="625" font-size="12" font-weight="bold" fill="#1565C0">Adquisición de Clientes:</text>
+  <text x="30" y="645" font-size="11" fill="black">• CAC (Costo de Adquisición): \$500-800 por cliente</text>
+  <text x="30" y="660" font-size="11" fill="black">• Tiempo de venta: 2-4 semanas</text>
+  
+  <text x="20" y="690" font-size="12" font-weight="bold" fill="#1565C0">Rentabilidad:</text>
+  <text x="30" y="710" font-size="11" fill="black">• Margen de hardware: 75% | • Margen software: 85% | • ROI: 21 meses</text>
+  
+  <text x="20" y="740" font-size="12" font-weight="bold" fill="#1565C0">Retención y Crecimiento:</text>
+  <text x="30" y="760" font-size="11" fill="black">• Churn: &lt;5% anual | • LTV (Lifetime Value): \$6,000+ por cliente | • Escalabilidad: 1000+ unidades</text>
+</svg>

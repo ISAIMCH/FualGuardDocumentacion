@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg viewBox="0 0 1400 900" xmlns="http://www.w3.org/2000/svg">
+  <!-- Fondo blanco -->
+  <rect width="1400" height="900" fill="white" stroke="black" stroke-width="2"/>
+  
+  <!-- Título principal -->
+  <text x="700" y="35" font-size="28" font-weight="bold" text-anchor="middle" fill="black">
+    Matriz de Estados: Detección de Robo de Combustible
+  </text>
+  
+  <!-- Tabla principal de 4x4 -->
+  <!-- Encabezado superior -->
+  <rect x="50" y="70" width="1300" height="50" fill="#1976D2" stroke="black" stroke-width="2"/>
+  <text x="700" y="105" font-size="16" font-weight="bold" text-anchor="middle" fill="white">Estados y Eventos del Sistema FuelGuard</text>
+  
+  <!-- Fila 1: Encabezados de columnas -->
+  <rect x="50" y="130" width="325" height="60" fill="#E3F2FD" stroke="black" stroke-width="1"/>
+  <text x="212" y="165" font-size="13" font-weight="bold" text-anchor="middle" fill="black">ESTADO</text>
+  
+  <rect x="375" y="130" width="325" height="60" fill="#E3F2FD" stroke="black" stroke-width="1"/>
+  <text x="537" y="165" font-size="13" font-weight="bold" text-anchor="middle" fill="black">EVENTO DETECTADO</text>
+  
+  <rect x="700" y="130" width="325" height="60" fill="#E3F2FD" stroke="black" stroke-width="1"/>
+  <text x="862" y="165" font-size="13" font-weight="bold" text-anchor="middle" fill="black">ACCIÓN DEL SISTEMA</text>
+  
+  <rect x="1025" y="130" width="325" height="60" fill="#E3F2FD" stroke="black" stroke-width="1"/>
+  <text x="1187" y="165" font-size="13" font-weight="bold" text-anchor="middle" fill="black">TIPO DE ROBO</text>
+  
+  <!-- Fila 2: Estado Normal -->
+  <rect x="50" y="190" width="325" height="100" fill="#C8E6C9" stroke="black" stroke-width="1"/>
+  <text x="212" y="210" font-size="12" font-weight="bold" fill="#2E7D32">Estado Normal</text>
+  <text x="60" y="230" font-size="10" fill="black">• Flujo1 = 0</text>
+  <text x="60" y="245" font-size="10" fill="black">• Flujo2 = 0</text>
+  <text x="60" y="260" font-size="10" fill="black">• Tapa: Cerrada</text>
+  <text x="60" y="275" font-size="10" fill="black">• GPS: Activo</text>
+  
+  <rect x="375" y="190" width="325" height="100" fill="#F1F8E9" stroke="black" stroke-width="1"/>
+  <text x="537" y="210" font-size="11" font-weight="bold" fill="#558B2F">Sin eventos</text>
+  <text x="385" y="230" font-size="10" fill="black">Ningún cambio en</text>
+  <text x="385" y="245" font-size="10" fill="black">parámetros críticos</text>
+  <text x="385" y="260" font-size="10" fill="black"></text>
+  <text x="385" y="275" font-size="10" fill="black"></text>
+  
+  <rect x="700" y="190" width="325" height="100" fill="#E8F5E9" stroke="black" stroke-width="1"/>
+  <text x="862" y="210" font-size="11" font-weight="bold" fill="#1B5E20">Monitoreo continuo</text>
+  <text x="710" y="230" font-size="10" fill="black">• Registrar datos</text>
+  <text x="710" y="245" font-size="10" fill="black">• Enviar MQTT</text>
+  <text x="710" y="260" font-size="10" fill="black">• Actualizar GPS</text>
+  <text x="710" y="275" font-size="10" fill="black">• Buffer local</text>
+  
+  <rect x="1025" y="190" width="325" height="100" fill="#DCEDC8" stroke="black" stroke-width="1"/>
+  <text x="1187" y="210" font-size="11" font-weight="bold" fill="#33691E">SIN ANOMALÍA</text>
+  <text x="1035" y="230" font-size="10" fill="black">Operación legítima</text>
+  <text x="1035" y="245" font-size="10" fill="black">o vehículo estacionado</text>
+  
+  <!-- Fila 3: Flujo Anómalo Detectado -->
+  <rect x="50" y="300" width="325" height="100" fill="#FFF9C4" stroke="black" stroke-width="1"/>
+  <text x="212" y="320" font-size="12" font-weight="bold" fill="#F57F17">Flujo Anómalo</text>
+  <text x="60" y="340" font-size="10" fill="black">• Flujo1 > 2 L/min</text>
+  <text x="60" y="355" font-size="10" fill="black">• Sin movimiento GPS</text>
+  <text x="60" y="370" font-size="10" fill="black">• Tapa: Cerrada</text>
+  <text x="60" y="385" font-size="10" fill="black">• Vehículo estacionado</text>
+  
+  <rect x="375" y="300" width="325" height="100" fill="#FFECB3" stroke="black" stroke-width="1"/>
+  <text x="537" y="320" font-size="11" font-weight="bold" fill="#E65100">Consumo sin movimiento</text>
+  <text x="385" y="340" font-size="10" fill="black">Flujo detectado pero</text>
+  <text x="385" y="355" font-size="10" fill="black">vehículo no se mueve</text>
+  <text x="385" y="370" font-size="10" fill="black">(Δposición GPS < 10m)</text>
+  
+  <rect x="700" y="300" width="325" height="100" fill="#FFE0B2" stroke="black" stroke-width="1"/>
+  <text x="862" y="320" font-size="11" font-weight="bold" fill="#E65100">ALERTA NIVEL 1</text>
+  <text x="710" y="340" font-size="10" fill="black">• Notificación usuario</text>
+  <text x="710" y="355" font-size="10" fill="black">• Foto posición GPS</text>
+  <text x="710" y="370" font-size="10" fill="black">• Registrar timestamp</text>
+  <text x="710" y="385" font-size="10" fill="black">• Guardar flujo exacto</text>
+  
+  <rect x="1025" y="300" width="325" height="100" fill="#FFCCBC" stroke="black" stroke-width="1"/>
+  <text x="1187" y="320" font-size="11" font-weight="bold" fill="#BF360C">DESVÍO ESTACIONADO</text>
+  <text x="1035" y="340" font-size="10" fill="black">Combustible descargado</text>
+  <text x="1035" y="355" font-size="10" fill="black">sin autorización mientras</text>
+  <text x="1035" y="370" font-size="10" fill="black">vehículo estacionado</text>
+  
+  <!-- Fila 4: Apertura de Tapa No Autorizada -->
+  <rect x="50" y="410" width="325" height="100" fill="#FFCCCC" stroke="black" stroke-width="2"/>
+  <text x="212" y="430" font-size="12" font-weight="bold" fill="#C62828">Tapa Abierta</text>
+  <text x="60" y="450" font-size="10" fill="black">• Reed Switch: ABIERTO</text>
+  <text x="60" y="465" font-size="10" fill="black">• Flujo1/Flujo2 = 0</text>
+  <text x="60" y="480" font-size="10" fill="black">• Sensor humedad alto</text>
+  <text x="60" y="495" font-size="10" fill="black">• Temperatura anómala</text>
+  
+  <rect x="375" y="410" width="325" height="100" fill="#F8BBD0" stroke="black" stroke-width="2"/>
+  <text x="537" y="430" font-size="11" font-weight="bold" fill="#AD1457">Acceso no autorizado</text>
+  <text x="385" y="450" font-size="10" fill="black">Sensor reed detecta</text>
+  <text x="385" y="465" font-size="10" fill="black">apertura de tapa</text>
+  <text x="385" y="480" font-size="10" fill="black">en &lt; 1 segundo</text>
+  
+  <rect x="700" y="410" width="325" height="100" fill="#F48FB1" stroke="black" stroke-width="2"/>
+  <text x="862" y="430" font-size="11" font-weight="bold" fill="#880E4F">ALERTA NIVEL 2 (CRÍTICA)</text>
+  <text x="710" y="450" font-size="10" fill="black">• Alarma sonora (buzzer)</text>
+  <text x="710" y="465" font-size="10" fill="black">• Email/SMS inmediato</text>
+  <text x="710" y="480" font-size="10" fill="black">• Apagar periféricos</text>
+  <text x="710" y="495" font-size="10" fill="black">• Lock de escritura logs</text>
+  
+  <rect x="1025" y="410" width="325" height="100" fill="#EC407A" stroke="black" stroke-width="2"/>
+  <text x="1187" y="430" font-size="11" font-weight="bold" fill="#880E4F">SABOTAJE INMEDIATO</text>
+  <text x="1035" y="450" font-size="10" fill="black">Intento de acceso</text>
+  <text x="1035" y="465" font-size="10" fill="black">directo al tanque</text>
+  <text x="1035" y="480" font-size="10" fill="black">(manipulación física)</text>
+  
+  <!-- Fila 5: Consumo Excesivo en Movimiento -->
+  <rect x="50" y="520" width="325" height="100" fill="#FFB2B2" stroke="black" stroke-width="1"/>
+  <text x="212" y="540" font-size="12" font-weight="bold" fill="#D32F2F">Consumo Excesivo</text>
+  <text x="60" y="560" font-size="10" fill="black">• Flujo1 > Consumo esperado</text>
+  <text x="60" y="575" font-size="10" fill="black">• Factor: 1.5x histórico</text>
+  <text x="60" y="590" font-size="10" fill="black">• Movimiento GPS activo</text>
+  <text x="60" y="605" font-size="10" fill="black">• Patrón: Rutas anómalas</text>
+  
+  <rect x="375" y="520" width="325" height="100" fill="#EF9A9A" stroke="black" stroke-width="1"/>
+  <text x="537" y="540" font-size="11" font-weight="bold" fill="#C62828">Consumo 50% sobre esperado</text>
+  <text x="385" y="560" font-size="10" fill="black">Comparar contra:</text>
+  <text x="385" y="575" font-size="10" fill="black">• Histórico vehículo</text>
+  <text x="385" y="590" font-size="10" fill="black">• Ruta programada</text>
+  <text x="385" y="605" font-size="10" fill="black">• Distancia recorrida</text>
+  
+  <rect x="700" y="520" width="325" height="100" fill="#E57373" stroke="black" stroke-width="1"/>
+  <text x="862" y="540" font-size="11" font-weight="bold" fill="#B71C1C">ALERTA NIVEL 1.5</text>
+  <text x="710" y="560" font-size="10" fill="black">• Logging detallado</text>
+  <text x="710" y="575" font-size="10" fill="black">• Alertar supervisor</text>
+  <text x="710" y="590" font-size="10" fill="black">• Marcar en reporte</text>
+  <text x="710" y="605" font-size="10" fill="black">• Análisis posterior</text>
+  
+  <rect x="1025" y="520" width="325" height="100" fill="#EF5350" stroke="black" stroke-width="1"/>
+  <text x="1187" y="540" font-size="11" font-weight="bold" fill="#B71C1C">FUGAS O DESVIACIÓN</text>
+  <text x="1035" y="560" font-size="10" fill="black">Combustible desviado</text>
+  <text x="1035" y="575" font-size="10" fill="black">durante operación de</text>
+  <text x="1035" y="590" font-size="10" fill="black">transporte o entrega</text>
+  
+  <!-- Fila 6: Diferencia Flujo Ida vs Retorno -->
+  <rect x="50" y="630" width="325" height="100" fill="#FF8A80" stroke="black" stroke-width="2"/>
+  <text x="212" y="650" font-size="12" font-weight="bold" fill="#B71C1C">Desequilibrio Flujos</text>
+  <text x="60" y="670" font-size="10" fill="black">• (Flujo1 - Flujo2) > 0.5L</text>
+  <text x="60" y="685" font-size="10" fill="black">• Por > 5 minutos</text>
+  <text x="60" y="700" font-size="10" fill="black">• Vehículo en operación</text>
+  <text x="60" y="715" font-size="10" fill="black">• GPS activo</text>
+  
+  <rect x="375" y="630" width="325" height="100" fill="#FF6E6E" stroke="black" stroke-width="2"/>
+  <text x="537" y="650" font-size="11" font-weight="bold" fill="#C62828">Fuga en línea retorno</text>
+  <text x="385" y="670" font-size="10" fill="black">Combustible sale sin</text>
+  <text x="385" y="685" font-size="10" fill="black">detectarse en retorno</text>
+  <text x="385" y="700" font-size="10" fill="black">(acumulación > 500mL)</text>
+  
+  <rect x="700" y="630" width="325" height="100" fill="#FF5252" stroke="black" stroke-width="2"/>
+  <text x="862" y="650" font-size="11" font-weight="bold" fill="#B71C1C">ALERTA NIVEL 1.5</text>
+  <text x="710" y="670" font-size="10" fill="black">• Alertar mantenimiento</text>
+  <text x="710" y="685" font-size="10" fill="black">• Inspeccionar fugas</text>
+  <text x="710" y="700" font-size="10" fill="black">• Evaluar daños</text>
+  <text x="710" y="715" font-size="10" fill="black">• Guardar timestamp</text>
+  
+  <rect x="1025" y="630" width="325" height="100" fill="#FF3D3D" stroke="black" stroke-width="2"/>
+  <text x="1187" y="650" font-size="11" font-weight="bold" fill="#B71C1C">PROBLEMA TÉCNICO</text>
+  <text x="1035" y="670" font-size="10" fill="black">O ROBO OCULTO</text>
+  <text x="1035" y="685" font-size="10" fill="black">Fuga deliberada en</text>
+  <text x="1035" y="700" font-size="10" fill="black">línea de retorno para</text>
+  <text x="1035" y="715" font-size="10" fill="black">evitar detección</text>
+  
+  <!-- Leyenda de umbrales -->
+  <rect x="50" y="750" width="1300" height="130" fill="#F5F5F5" stroke="black" stroke-width="1"/>
+  
+  <text x="60" y="775" font-size="13" font-weight="bold" fill="#1565C0">Umbrales de Detección y Fórmulas</text>
+  
+  <text x="60" y="805" font-size="11" font-weight="bold" fill="#D32F2F">Flujo Anómalo Estacionado:</text>
+  <text x="70" y="825" font-size="10" font-family="monospace" fill="black">IF (vehículo_estacionado = TRUE) AND (flujo1 > 0.1 L/min) THEN ALERTA_NIVEL_1</text>
+  
+  <text x="60" y="845" font-size="11" font-weight="bold" fill="#D32F2F">Consumo Excesivo:</text>
+  <text x="70" y="865" font-size="10" font-family="monospace" fill="black">IF (flujo_actual / flujo_promedio_histórico) > 1.5 THEN ALERTA_NIVEL_1.5</text>
+</svg>
